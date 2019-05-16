@@ -5,26 +5,23 @@ import EditOptions from "./EditOptions";
 const sections = require("../sections.json");
 
 class EditSchemaForm extends Component {
+
   render() {
     const {
-      schemaItems,
       schemaItemTriggeredId,
-      changedSettings,
+      schemaItemTriggered,
       handleChange,
       updateAndClose,
-      schemaItemTriggered
     } = this.props;
 
-    const selectedItem = schemaItems[schemaItemTriggeredId];
     const allOptions = Object.keys(sections);
     const options = allOptions.map(option => {
       return { value: option, label: option };
     });
 
-    const activeType = changedSettings.type || selectedItem.type;
-    if (!activeType) return;
+    if (!schemaItemTriggered) return;
 
-    const inputs = Object.keys(sections[activeType]);
+    const inputs = Object.keys(sections[schemaItemTriggered.type]);
 
     const numberInputs = ["min", "max", "step"];
 
@@ -36,23 +33,27 @@ class EditSchemaForm extends Component {
               label="Input type"
               options={options}
               onChange={value => handleChange("type", value)}
-              value={changedSettings.type || selectedItem.type}
+              value={schemaItemTriggered.type}
             />
 
             {inputs.map(input => {
               if (input === "options") {
-                return schemaItemTriggered.options.map((item, index) => {
-                  return (
-                    <EditOptions
-                      key={item}
-                      index={index}
-                      inputType={changedSettings.type || selectedItem.type}
-                      changedSettings={changedSettings}
-                      options={schemaItemTriggered.options[index]}
-                      handleChange={handleChange}
-                    />
-                  );
-                });
+                return (
+                    <div key={input}>
+                      <p>Options</p>
+                        {schemaItemTriggered.options.map((item, index) => {
+                        return (
+                          <EditOptions
+                            key={'option' + index}
+                            index={index}
+                            inputType={schemaItemTriggered.type}
+                            options={schemaItemTriggered.options[index]}
+                            handleChange={handleChange}
+                          />
+                        );
+                      })}
+                    </div>
+                )
               }
 
               return (
@@ -60,11 +61,7 @@ class EditSchemaForm extends Component {
                   label={input}
                   key={input}
                   type={numberInputs.includes(input) ? "number" : ""}
-                  value={
-                    changedSettings[input] || changedSettings[input] === ""
-                      ? changedSettings[input]
-                      : selectedItem[input]
-                  }
+                  value={schemaItemTriggered[input]}
                   onChange={value => handleChange(input, value)}
                 />
               );

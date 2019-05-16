@@ -1,42 +1,30 @@
 import React, { Component } from "react";
 import { Modal } from "@shopify/polaris";
 import EditSchemaForm from './EditSchemaForm';
-
+import { removeExtraneous } from './helpers';
 const sections = require("../sections.json");
 
 class EditSchemaModal extends Component {
-
-  state = {
-    changedSettings: {},
-  };
 
   deleteItem = () => {
     this.props.deleteSchemaItem(this.props.schemaItemTriggeredId);
     this.props.handleModalChange(this.props.schemaItemTriggeredId);
   }
 
-  handleChange = (input, value) => {
-    const settings = {  ...this.props.schemaItemTriggered, ...this.state.changedSettings };
-    settings[input] = value;
-    this.setState({ changedSettings: settings });
-  }
-
   updateAndClose = (inputs) => {
-    const updatedSchemaItem = {
-      ...this.props.schemaItems[this.props.schemaItemTriggeredId],   
-      ...this.state.changedSettings,
-    };
-    const schemaItemWithoutExtraneous = { type: updatedSchemaItem.type };
-    const schemaItemProperties = Object.keys(sections[updatedSchemaItem.type]);
+    const updatedSchemaItem = {  ...this.props.schemaItemTriggered };
+    const schemaItemProperties = [ 'type', ...Object.keys(sections[updatedSchemaItem.type])];
+    const schemaItemWithoutExtraneous = removeExtraneous(updatedSchemaItem, schemaItemProperties);
 
-    schemaItemProperties.forEach(property => { 
-      if (updatedSchemaItem[property]) {
-        schemaItemWithoutExtraneous[property] = updatedSchemaItem[property];
-      }
-    });      
+    if (schemaItemWithoutExtraneous.type === 'radio') {
+      schemaItemWithoutExtraneous.options = schemaItemWithoutExtraneous.options.map(option => {
+        return removeExtraneous(option, ['value', 'label']);
+      });
+      console.log(schemaItemWithoutExtraneous);
+    }
+   
 
     this.props.updateSchemaItem(this.props.schemaItemTriggeredId, schemaItemWithoutExtraneous);
-    this.setState(({ changedSettings }) => ({ changedSettings: {} })); 
     this.props.handleModalChange(this.props.schemaItemTriggeredId);
   }
   
@@ -60,16 +48,11 @@ class EditSchemaModal extends Component {
         >
           <Modal.Section>
             <EditSchemaForm 
-              addSchemaItem={this.props.addSchemaItem} 
               updateSchemaItem={this.props.updateSchemaItem}
               schemaItemTriggeredId={this.props.schemaItemTriggeredId}
               schemaItemTriggered={this.props.schemaItemTriggered}
-              schemaItems={this.props.schemaItems}
-              itemsToChange={this.itemsToChange}
-              removeProperty={this.removeProperty}
-              changedSettings={this.state.changedSettings}
               updateAndClose={this.updateAndClose}
-              handleChange={this.handleChange}
+              handleChange={this.props.handleChange}
             />
           </Modal.Section>
         </Modal>

@@ -10,16 +10,16 @@ class Options extends Component {
   }
   
   render() {
-    const { index, settings } = this.props;
+    const { index, settings, type } = this.props;
     const options = settings.options;
     const currentOptionSet = options[index];
     const isLastItem = (options.length - 1) === index;
     const sharedInputs = ['value', 'label'];
     let group;
     
-    if (this.props.type === 'select') {
+    if (type === 'select') {
       group = <TextField 
-                key={'group'}
+                key={'group' + index}
                 placeholder="group"
                 value={currentOptionSet['group']}
                 onChange={(value) => this.changeOption('group', index, value, options )}
