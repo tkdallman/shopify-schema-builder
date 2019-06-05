@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import { Modal,  Button } from "@shopify/polaris";
 import AddSchemaForm from './AddSchemaForm';
-
+import PropTypes from "prop-types";
 const sections = require("../sections.json");
 
 class AddSchemaModal extends Component {
+  static propTypes = {
+    addSchemaItem: PropTypes.func,
+  }
+
   state = {
     active: false,
-    settings: { type: 'text' },
+    settings: { type: 'image_picker' },
   };
 
   handleModalChange = () => {
@@ -50,6 +54,12 @@ class AddSchemaModal extends Component {
     this.setState({ settings });
   };
 
+  removeOptionSet = (index) => {
+    const settings = this.state.settings;
+    settings.options.splice(index, 1);
+    this.setState({ settings });
+  }
+
   render() {
     const { active } = this.state;
 
@@ -75,6 +85,7 @@ class AddSchemaModal extends Component {
             <AddSchemaForm 
               addSchemaItem={this.props.addSchemaItem} 
               addNewOptionSet={this.addNewOptionSet}
+              removeOptionSet={this.removeOptionSet}
               handleChange={this.handleChange}
               settings={this.state.settings}
             />

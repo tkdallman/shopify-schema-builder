@@ -7,55 +7,97 @@ import {
   Heading,
   Button
 } from "@shopify/polaris";
+import PropTypes from "prop-types";
 import SchemaItem from "./SchemaItem";
 import AddSchemaModal from "./AddSchemaModal";
 import EditSchemaModal from "./EditSchemaModal";
+import RenderSchemaModal from "./RenderSchemaModal";
 import FakeItems from "../FakeItems";
 
 class PageLayout extends Component {
   state = {
     modalActive: false,
     schemaItemTriggered: {},
-    schemaItemTriggeredId: ""
+    schemaItemTriggeredIndex: undefined,
   };
 
-  handleChange = (input, value) => {
-    const settings = { ...this.state.schemaItemTriggered };
+  static propTypes = {
+    schemaItems: PropTypes.array,
+    addSchemaItem: PropTypes.func,
+    updateSchemaItem: PropTypes.func,
+    deleteSchemaItem: PropTypes.func,
+    moveSchemaItem: PropTypes.func,
+  };
 
-    if (input.attribute) {
-      settings.options[input.index][input.attribute] = value;
-    } else {
-      settings[input] = value;
-    }
+  handleSettingChange = (change, value) => {
+    const settings = { ...this.state.schemaItemTriggered };
+    const changeType = change.changeType;
+    switch(changeType) {
+      case 'editOption':
+        settings.options[change.index][change.attribute] = value;
+        break;
+
+      case 'removeOption':
+        settings.options.splice(change.index, 1);
+        break;
+
+      case 'addOption':
+        settings.options.push({});
+        break;
+
+      case 'editInput':
+        settings[change.input] = value;
+        break;
+      
+      default: 
+      }
 
     this.setState({ schemaItemTriggered: settings });
   };
 
-  handleModalChange = itemId => {
-    if (itemId.includes && itemId.includes("schemaItem")) {
-      const itemDetails = this.props.schemaItems[itemId];
+  handleModalChange = index => {
+    if (index >= 0) {
+      const itemDetails = JSON.parse(JSON.stringify(this.props.schemaItems[index]));
+
       this.setState(({ schemaItemTriggered }) => ({
         schemaItemTriggered: itemDetails
       }));
-      this.setState(({ schemaItemTriggeredId }) => ({
-        schemaItemTriggeredId: itemId
-      }));
+      this.setState(({ schemaItemTriggeredIndex }) => ({
+        schemaItemTriggeredIndex: index
+      }));      
     }
     this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
   };
 
-  moveItem = () => {
-    console.log(Object.keys(this.props.schemaItems));
+  moveItem = (index, destination) => {
+    this.props.moveSchemaItem(index, destination);
   }
+
   addFakeItems = () => {
-    this.props.addSchemaItem(FakeItems[1]);
-    setTimeout(
-      function() {
-        this.props.addSchemaItem(FakeItems[2]);
-      }.bind(this),
-      200
-    );
+    FakeItems.forEach(item => {
+      setTimeout(() => {
+        this.props.addSchemaItem(item);
+      }, 200)
+    })
   };
+
+  getSettings = index => {
+    const settings = [];
+
+    if (index > 0) { 
+      settings.push({
+        content: '↑', 
+        onClick: () => this.moveItem(index, index-1),
+      })
+    }
+    if (index !== this.props.schemaItems.length - 1) { 
+      settings.push({
+        content: '↓', 
+        onClick: () => this.moveItem(index, index+1),
+      })
+    }    
+    return settings;
+  }
 
   render() {
     return (
@@ -64,29 +106,20 @@ class PageLayout extends Component {
         <Card>
           <ResourceList
             resourceName={{ singular: "Schema Item", plural: "Schema Items" }}
-            items={Object.keys(this.props.schemaItems)}
-            renderItem={item => {
-              const itemValues = this.props.schemaItems[item];
-              const shortcutActions = [
-                {
-                  content: '↑', 
-                  onClick: this.moveItem,
-                },
-                {
-                  content: '↓', 
-                  onClick: this.moveItem,
-                }
-              ];
+            items={this.props.schemaItems}
+            renderItem={(item) => {
+              const index = this.props.schemaItems.indexOf(item);
 
-              if (itemValues)
+              if (item)
                 return (
                   <ResourceList.Item
-                    id={item}
-                    accessibilityLabel={`View details for ${itemValues.id}`}
+                    id={index}
+                    key={index}
+                    accessibilityLabel={`View details for ${item.id}`}
                     onClick={this.handleModalChange}
-                    shortcutActions={shortcutActions}
+                    shortcutActions={this.getSettings(index)}
                   >
-                    <SchemaItem item={itemValues} />
+                    <SchemaItem id={index} item={item} />
                   </ResourceList.Item>
                 );
             }}
@@ -100,12 +133,12 @@ class PageLayout extends Component {
               modalActive={this.state.modalActive}
               handleModalChange={this.handleModalChange}
               schemaItemTriggered={this.state.schemaItemTriggered}
-              schemaItemTriggeredId={this.state.schemaItemTriggeredId}
-              schemaItems={this.props.schemaItems}
-              handleChange={this.handleChange}
+              schemaItemTriggeredIndex={this.state.schemaItemTriggeredIndex}
+              handleChange={this.handleSettingChange}
             />
             <Button onClick={this.addFakeItems}>Add fake schema items</Button>
             <AddSchemaModal addSchemaItem={this.props.addSchemaItem} />
+            <RenderSchemaModal schemaItems={this.props.schemaItems} />            
           </Layout.AnnotatedSection>
         </Card>
       </Page>

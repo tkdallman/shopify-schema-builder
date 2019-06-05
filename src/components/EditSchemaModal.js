@@ -1,14 +1,25 @@
 import React, { Component } from "react";
 import { Modal } from "@shopify/polaris";
+import PropTypes from "prop-types";
 import EditSchemaForm from './EditSchemaForm';
 import { removeExtraneous } from './helpers';
 const sections = require("../sections.json");
 
 class EditSchemaModal extends Component {
 
+  static propTypes = {
+    updateSchemaItem: PropTypes.func,
+    deleteSchemaItem: PropTypes.func,
+    modalActive: PropTypes.bool,
+    handleModalChange: PropTypes.func,
+    schemaItemTriggered: PropTypes.object,
+    schemaItemTriggeredIndex: PropTypes.number,
+  };
+
   deleteItem = () => {
-    this.props.deleteSchemaItem(this.props.schemaItemTriggeredId);
-    this.props.handleModalChange(this.props.schemaItemTriggeredId);
+    const { deleteSchemaItem, handleModalChange, schemaItemTriggeredIndex } = this.props;
+    deleteSchemaItem(schemaItemTriggeredIndex);
+    handleModalChange(schemaItemTriggeredIndex);
   }
 
   updateAndClose = (inputs) => {
@@ -16,27 +27,26 @@ class EditSchemaModal extends Component {
     const schemaItemProperties = [ 'type', ...Object.keys(sections[updatedSchemaItem.type])];
     const schemaItemWithoutExtraneous = removeExtraneous(updatedSchemaItem, schemaItemProperties);
 
-    if (schemaItemWithoutExtraneous.type === 'radio') {
+    if (schemaItemWithoutExtraneous.type === 'radio' && schemaItemWithoutExtraneous.options) {
       schemaItemWithoutExtraneous.options = schemaItemWithoutExtraneous.options.map(option => {
         return removeExtraneous(option, ['value', 'label']);
       });
-      console.log(schemaItemWithoutExtraneous);
     }
-   
 
-    this.props.updateSchemaItem(this.props.schemaItemTriggeredId, schemaItemWithoutExtraneous);
-    this.props.handleModalChange(this.props.schemaItemTriggeredId);
+    this.props.updateSchemaItem(this.props.schemaItemTriggeredIndex, schemaItemWithoutExtraneous);
+    this.props.handleModalChange(this.props.schemaItemTriggeredIndex);
   }
   
   render() {
+
     return (
       <div>
         <Modal
           open={this.props.modalActive}
           onClose={this.props.handleModalChange}
-          title="Add schema section"
+          title="Edit schema section"
           primaryAction={{
-            content: "Finished",
+            content: "Confirm changes",
             onAction: this.updateAndClose
           }}
           secondaryActions={[

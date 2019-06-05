@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { Stack, Form, Select, FormLayout, TextField } from "@shopify/polaris";
 import Options from './Options';
-
+import PropTypes from "prop-types";
 const sections = require("../sections.json");
 
 class AddSchemaForm extends Component {
-
+  static propTypes = {
+    addSchemaItem: PropTypes.func,
+    addNewOptionSet: PropTypes.func,
+    removeOptionSet: PropTypes.func,
+    handleChange: PropTypes.func,
+    settings: PropTypes.object,
+  }
+  
   render() {
     const { settings } = this.props;
     const allOptions = Object.keys(sections);
@@ -42,6 +49,7 @@ class AddSchemaForm extends Component {
                           settings={settings} 
                           handleChange={this.props.handleChange}
                           addNewOptionSet={this.props.addNewOptionSet}
+                          removeOptionSet={this.props.removeOptionSet}
                         />
                       })}
                     </div>
