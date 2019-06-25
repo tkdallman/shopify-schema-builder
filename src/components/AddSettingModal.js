@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import { Modal,  Button } from "@shopify/polaris";
-import AddSchemaForm from './AddSchemaForm';
+import AddSettingForm from './AddSettingForm';
 import PropTypes from "prop-types";
 const sections = require("../sections.json");
 
-class AddSchemaModal extends Component {
+class AddSettingModal extends Component {
   static propTypes = {
-    addSchemaItem: PropTypes.func,
+    addSettingItem: PropTypes.func,
+    blockIndex: PropTypes.number,
+    settingIds: PropTypes.array,
   }
 
   state = {
     active: false,
     settings: { type: 'image_picker' },
+    idError: false,
   };
 
   handleModalChange = () => {
@@ -20,15 +23,22 @@ class AddSchemaModal extends Component {
   
   handleClose = () => {
     this.setState(({ settings }) => ({ settings: { type: 'text' } }));
-    this.setState(({ active }) => ({
-      active: !active
-    }));
+    this.handleModalChange();
   };
 
   handleChange = (input, value) => {
     const hasOptions = ['radio', 'select'];
     const settings = {  ...this.state.settings };
     settings[input] = value;
+
+    if (input === 'id') {
+      if (this.props.allSettingIds && this.props.allSettingIds.includes(value)) {
+        this.setState(({ idError }) => ({ idError: true })); 
+      } else {
+        this.setState(({ idError }) => ({ idError: false }));        
+      }   
+    }
+
     if (input === 'type' && hasOptions.includes(value) && !settings.options) {
       settings.options = [{}];
     };    
@@ -36,15 +46,17 @@ class AddSchemaModal extends Component {
   }
 
   addItem = () => {
-    const schemaItem = {};
-    const schemaItemProperties = Object.keys(sections[this.state.settings.type]);
+    if (this.state.idError) return;
+    const settingItem = {};
+    const settingItemProperties = Object.keys(sections[this.state.settings.type]);
+    const blockIndex = this.props.blockIndex >= 0 ? this.props.blockIndex : undefined;
 
     Object.keys(this.state.settings)
-      .filter(item => schemaItemProperties.includes(item) || item === 'type')
-      .forEach(item => { schemaItem[item] = this.state.settings[item];
+      .filter(item => settingItemProperties.includes(item) || item === 'type')
+      .forEach(item => { settingItem[item] = this.state.settings[item];
     });  
 
-    this.props.addSchemaItem(schemaItem);
+    this.props.addSettingItem(settingItem, blockIndex);
     this.handleClose();
   }
 
@@ -65,11 +77,11 @@ class AddSchemaModal extends Component {
 
     return (
       <div>
-        <Button onClick={this.handleModalChange}>New Schema Item</Button>
+        <Button onClick={this.handleModalChange}>New Setting Item</Button>
         <Modal
           open={active}
           onClose={this.handleClose}
-          title="Add schema section"
+          title="Add setting section"
           primaryAction={{
             content: "Add section",
             onAction: this.addItem
@@ -82,12 +94,13 @@ class AddSchemaModal extends Component {
           ]}
         >
           <Modal.Section>
-            <AddSchemaForm 
-              addSchemaItem={this.props.addSchemaItem} 
+            <AddSettingForm 
+              addSettingItem={this.props.addSettingItem} 
               addNewOptionSet={this.addNewOptionSet}
               removeOptionSet={this.removeOptionSet}
               handleChange={this.handleChange}
               settings={this.state.settings}
+              idError={this.state.idError}
             />
           </Modal.Section>
         </Modal>
@@ -96,4 +109,4 @@ class AddSchemaModal extends Component {
   }
 }
 
-export default AddSchemaModal;
+export default AddSettingModal;

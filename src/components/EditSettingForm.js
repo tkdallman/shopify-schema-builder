@@ -1,22 +1,23 @@
 import React, { Component } from "react";
-import { Stack, Form, Select, FormLayout, TextField } from "@shopify/polaris";
+import { Stack, Form, Select, FormLayout, TextField, InlineError } from "@shopify/polaris";
 import PropTypes from "prop-types";
 import EditOptions from "./EditOptions";
 
 const sections = require("../sections.json");
 
-class EditSchemaForm extends Component {
+class EditSettingForm extends Component {
   static propTypes = {
-    updateSchemaItem: PropTypes.func,
+    updateSettingItem: PropTypes.func,
     updateAndClose: PropTypes.func,
     handleChange: PropTypes.func,
-    schemaItemTriggered: PropTypes.object,
-    schemaItemTriggeredId: PropTypes.number,
+    settingItemTriggered: PropTypes.object,
+    settingItemTriggeredId: PropTypes.number,
   }
 
   render() {
+
     const {
-      schemaItemTriggered,
+      settingItemTriggered,
       handleChange,
       updateAndClose,
     } = this.props;
@@ -27,10 +28,9 @@ class EditSchemaForm extends Component {
       return { value: option, label: option };
     });
 
-    if (!schemaItemTriggered) return;
+    if (!settingItemTriggered) return;
 
-    const inputs = Object.keys(sections[schemaItemTriggered.type]);
-
+    const inputs = Object.keys(sections[settingItemTriggered.type]);
     const numberInputs = ["min", "max", "step"];
 
     return (
@@ -46,24 +46,24 @@ class EditSchemaForm extends Component {
                   input: "type"
                 }
               , value)}
-              value={schemaItemTriggered.type}
+              value={settingItemTriggered.type}
             />
 
             {inputs.map(input => {
               if (input === "options") {
-                if (!schemaItemTriggered.options) return false;
+                if (!settingItemTriggered.options) return false;
                 return (
                   <div key={input}>
                     <p>Options</p>
-                      {schemaItemTriggered.options.map((item, index) => {
-                        const isLastItem = schemaItemTriggered.options.length - 1 === index;
+                      {settingItemTriggered.options.map((item, index) => {
+                        const isLastItem = settingItemTriggered.options.length - 1 === index;
 
                       return (
                         <EditOptions
                           key={'option' + index}
                           index={index}
-                          inputType={schemaItemTriggered.type}
-                          options={schemaItemTriggered.options[index]}
+                          inputType={settingItemTriggered.type}
+                          options={settingItemTriggered.options[index]}
                           handleChange={handleChange}
                           isLastItem={isLastItem}
                         />
@@ -74,16 +74,21 @@ class EditSchemaForm extends Component {
               }
 
               return (
-                <TextField
-                  label={input}
-                  key={input}
-                  type={numberInputs.includes(input) ? "number" : ""}
-                  value={schemaItemTriggered[input]}
-                  onChange={value => handleChange({
-                    changeType: 'editInput',
-                    input
-                  }, value)}
-                />
+                <div key={input}>
+                  <TextField
+                    label={input}
+                    key={input}
+                    type={numberInputs.includes(input) ? "number" : ""}
+                    value={settingItemTriggered[input]}
+                    onChange={value => handleChange({
+                      changeType: 'editInput',
+                      input
+                    }, value)}
+                  />
+                  {input === 'id' && this.props.idError && (
+                    <InlineError message="Setting IDs must be unique" fieldID="settingID" />
+                  )}
+                </div>
               );
             })}
           </Stack>
@@ -93,4 +98,4 @@ class EditSchemaForm extends Component {
   }
 }
 
-export default EditSchemaForm;
+export default EditSettingForm;

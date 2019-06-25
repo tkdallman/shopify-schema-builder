@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Stack, Form, Select, FormLayout, TextField } from "@shopify/polaris";
+import { Stack, Form, Select, FormLayout, TextField, InlineError } from "@shopify/polaris";
 import Options from './Options';
 import PropTypes from "prop-types";
 const sections = require("../sections.json");
 
-class AddSchemaForm extends Component {
+class AddSettingForm extends Component {
+
   static propTypes = {
-    addSchemaItem: PropTypes.func,
+    addSettingItem: PropTypes.func,
     addNewOptionSet: PropTypes.func,
     removeOptionSet: PropTypes.func,
     handleChange: PropTypes.func,
@@ -57,13 +58,20 @@ class AddSchemaForm extends Component {
                 }
               }
 
-              return <TextField
-                label={input}
-                key={input}
-                type={numberInputs.includes(input) ? 'number' : ''}
-                value={this.props.settings[input]}
-                onChange={(v) => this.props.handleChange(input,v)}
-              />   
+              return (
+                <div key={input}>
+                  <TextField
+                    label={input}
+                    key={input}
+                    type={numberInputs.includes(input) ? 'number' : ''}
+                    value={this.props.settings[input]}
+                    onChange={(v) => this.props.handleChange(input,v)}
+                  /> 
+                  {input === 'id' && this.props.idError && (
+                    <InlineError message="Setting IDs must be unique" fieldID="settingID" />
+                  )}
+                </div>
+              )  
               })
             }
           </Stack>
@@ -73,4 +81,4 @@ class AddSchemaForm extends Component {
   }
 }
 
-export default AddSchemaForm;
+export default AddSettingForm;
