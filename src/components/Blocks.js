@@ -62,13 +62,22 @@ class Blocks extends Component {
                   moveItem={this.props.moveItem}
                   duplicateSettingsItem={this.props.duplicateSettingsItem}
                   
+                  
                   />
               </Collapsible>
-                <Stack distribution="center" className="tktesting">
+                <Stack distribution="center">
                   {blockState[`block${index}`] && (                
                     <>
                       <Button onClick={() => this.props.addFakeItems(index)}>Add fake setting items</Button>
-                      <AddSettingModal addSettingItem={this.props.addSettingItem} blockIndex={index} />
+                      <AddSettingModal 
+                        addSettingItem={this.props.addSettingItem} 
+                        blockIndex={index} 
+                        handleAddChange={this.props.handleAddChange}
+                        addNewOptionSet={this.props.addNewOptionSet}
+                        removeOptionSet={this.props.removeOptionSet}  
+                        handleAddModal={this.propshandleAddModal}
+                        addModalActive={this.props.addModalActive}                         
+                      />
                     </>
                   )}
                   <Button onClick={() => this.props.deleteBlock(index)}>Delete Block</Button>

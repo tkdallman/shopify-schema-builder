@@ -9,16 +9,15 @@ class EditSettingForm extends Component {
   static propTypes = {
     updateSettingItem: PropTypes.func,
     updateAndClose: PropTypes.func,
-    handleChange: PropTypes.func,
+    handleSettingChange: PropTypes.func,
     settingItemTriggered: PropTypes.object,
-    settingItemTriggeredId: PropTypes.number,
   }
 
   render() {
-
+    
     const {
       settingItemTriggered,
-      handleChange,
+      handleSettingChange,
       updateAndClose,
     } = this.props;
 
@@ -40,7 +39,7 @@ class EditSettingForm extends Component {
             <Select
               label="Input type"
               options={options}
-              onChange={value => handleChange(
+              onChange={value => handleSettingChange(
                 {
                   changeType: "editInput",
                   input: "type"
@@ -64,7 +63,7 @@ class EditSettingForm extends Component {
                           index={index}
                           inputType={settingItemTriggered.type}
                           options={settingItemTriggered.options[index]}
-                          handleChange={handleChange}
+                          handleSettingChange={handleSettingChange}
                           isLastItem={isLastItem}
                         />
                       );
@@ -80,7 +79,7 @@ class EditSettingForm extends Component {
                     key={input}
                     type={numberInputs.includes(input) ? "number" : ""}
                     value={settingItemTriggered[input]}
-                    onChange={value => handleChange({
+                    onChange={value => handleSettingChange({
                       changeType: 'editInput',
                       input
                     }, value)}

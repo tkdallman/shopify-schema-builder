@@ -62,10 +62,9 @@ class EditSettingModal extends Component {
           <Modal.Section>
             <EditSettingForm 
               updateSettingItem={this.props.updateSettingItem}
-              settingItemTriggeredId={this.props.settingItemTriggeredId}
               settingItemTriggered={this.props.settingItemTriggered}
               updateAndClose={this.updateAndClose}
-              handleChange={this.props.handleChange}
+              handleSettingChange={this.props.handleSettingChange}
               idError={this.props.idError}
             />
           </Modal.Section>

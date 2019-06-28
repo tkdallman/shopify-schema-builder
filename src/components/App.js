@@ -77,11 +77,7 @@ class App extends Component {
 
   handleChange = (input, value, blockIndex) => {
     const fields = {  ...this.state.fields };
-    if (blockIndex >= 0) {
-      fields.blocks[blockIndex][input] = value
-    } else {
-      fields[input] = value;
-    }
+    blockIndex >= 0 ? fields.blocks[blockIndex][input] = value : fields[input] = value;
     
     if (value === '') { 
       const desiredFields = Object.keys(fields).filter(field => field !== input );

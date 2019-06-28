@@ -7,14 +7,12 @@ class Options extends Component {
     index: PropTypes.number,
     type: PropTypes.string,
     settings: PropTypes.object,
-    handleChange: PropTypes.func,
-    addNewOptionSet: PropTypes.func,
-    removeOptionSet: PropTypes.func,
+
   };
 
   changeOption = (input, index, value, options) => {
     options[index][input] = value;
-    this.props.handleChange("options", options);
+    this.props.handleAddChange("options", options);
   };
 
   render() {
