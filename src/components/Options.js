@@ -6,17 +6,18 @@ class Options extends Component {
   static propTypes = {
     index: PropTypes.number,
     type: PropTypes.string,
-    settings: PropTypes.object,
+    settings: PropTypes.array,
+    handleSettingChange: PropTypes.func,
 
   };
 
   changeOption = (input, index, value, options) => {
     options[index][input] = value;
-    this.props.handleAddChange("options", options);
+    this.props.handleSettingChange("options", options);
   };
 
   render() {
-    const { index, settings: { options }, type } = this.props;
+    const { index, settings: { options }, type, handleSettingChange } = this.props;
     const currentOptionSet = options[index];
     const isLastItem = options.length - 1 === index;
     const sharedInputs = ["value", "label"];
@@ -28,7 +29,11 @@ class Options extends Component {
           key={"group" + index}
           placeholder="group"
           value={currentOptionSet["group"]}
-          onChange={value => this.changeOption("group", index, value, options)}
+          onChange={(value) => handleSettingChange({
+            changeType: 'editOption',
+            index, 
+            attribute: "group" 
+          },value)}          
         />
       );
     }
@@ -42,14 +47,16 @@ class Options extends Component {
               key={input}
               placeholder={input}
               value={currentOptionSet[input]}
-              onChange={value =>
-                this.changeOption(input, index, value, options)
-              }
+              onChange={(value) => handleSettingChange({
+                changeType: 'editOption',
+                index, 
+                attribute: input 
+              },value)}
             />
           );
         })}
         {isLastItem ? (
-          <Button onClick={this.props.addNewOptionSet} label="Add item">+</Button>
+          <Button onClick={() => handleSettingChange({ changeType: 'addOption' })} label="Add item">+</Button>
         ) : (
           <Button onClick={() => {this.props.removeOptionSet(index)}} label="Add item">-</Button>
         )}

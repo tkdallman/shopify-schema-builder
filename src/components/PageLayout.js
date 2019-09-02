@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import SettingItem from "./SettingItem";
 import SettingsModal from './SettingsModal'
 import RenderSchemaModal from "./RenderSchemaModal";
+import Blocks from "./Blocks";
 import FakeItems from "../FakeItems";
 import { uppercaseFirst } from './helpers';
 
@@ -26,26 +27,32 @@ class PageLayout extends Component {
     modalType: '',
     settingItemTriggered: {},
     settingItemTriggeredIndex: undefined,
+    settingItemTriggeredId: '',
     settings: { type: 'Pick an Option' },
     blockTriggeredIndex: undefined,
     idError: false,
   };
 
   static propTypes = {
-    blocks: PropTypes.array,
+    type: PropTypes.string,
+    handleFieldChange: PropTypes.func,
+    fields: PropTypes.object,
     settingItems: PropTypes.array,
+    blocks: PropTypes.array,
     addSettingItem: PropTypes.func,
     updateSettingItem: PropTypes.func,
     deleteSettingItem: PropTypes.func,
     moveSettingItem: PropTypes.func,
     addBlock: PropTypes.func,
+    deleteBlock: PropTypes.func,
   };
 
   handleSettingChange = (change, value) => {
-    const { modalType } = this.state;
-    const settings = modalType === 'edit' ? { ...this.state.settingItemTriggered } : { ...this.state.settings }
-    
+    const { modalType, blockTriggeredIndex, settingItemTriggered } = this.state;
+    const { blocks, settingItems } = this.props;
+    const settings = modalType === 'edit' ? { ...settingItemTriggered } : { ...this.state.settings }
     const changeType = change.changeType;
+
     switch(changeType) {
       case 'editOption':
         settings.options[change.index][change.attribute] = value;
@@ -60,32 +67,39 @@ class PageLayout extends Component {
         break;
 
       case 'editInput':
-        if (change.input === 'id') {
-          const allSettingIds = this.props.settingItems.map(item => item.id );
-          if (allSettingIds && allSettingIds.includes(value)) {
-            this.setState(({ idError }) => ({ idError: true })); 
-          } else {
-            this.setState(({ idError }) => ({ idError: false }));        
-          }   
-        }     
+        const itemsWithoutId = ['header', 'paragraph'];
         const itemsWithOptions = ['radio', 'select'];
+
+        if (change.input === 'type' && itemsWithoutId.includes(value)) {
+          this.setState(({ idError }) => ({ idError: false }));        
+        } 
+        if (change.input === 'id') {
+          const allSettings = blockTriggeredIndex >= 0 ? blocks[blockTriggeredIndex].settings : settingItems;
+          const allSettingIds = allSettings.map(item => item.id).filter(item => item !== undefined);
+          let errorState = false;
+          if (allSettingIds && allSettingIds.includes(value) && value !== this.state.settingItemTriggeredId) errorState = true;
+          if (value === '') errorState = true;
+          
+          this.setState(({ idError }) => ({ idError: errorState }));        
+        }  
+
         if (itemsWithOptions.includes(value)) {
           settings.options = [{}];
         }   
+
         settings[change.input] = value;
         break;
       }
 
     if (modalType === 'edit') {
-      this.setState({ settingItemTriggered: settings });
+      this.setState(({ settingItemTriggered }) => ({ settingItemTriggered: settings }));        
     } else {
-      this.setState({ settings });
+      this.setState(({ settings }));        
     }
   };
 
   handleModalChange = (modalChangeType, index, blockIndex) => {
-
-    if (!this.state.modalActive && modalChangeType !== 'add') {
+    if (!this.state.modalActive && !['add', 'duplicate'].includes(modalChangeType)) {
       let selectedItem;
   
       if (index >= 0) {
@@ -94,54 +108,19 @@ class PageLayout extends Component {
         
         const itemDetails = JSON.parse(JSON.stringify(selectedItem));
   
-        this.setState(({ settingItemTriggered }) => ({
-          settingItemTriggered: itemDetails
-        }));
-        this.setState(({ settingItemTriggeredIndex }) => ({
-          settingItemTriggeredIndex: index
-        }));      
-        this.setState(({ blockTriggeredIndex }) => ({
-          blockTriggeredIndex: blockIndex
-        }));     
-        this.setState(({ idError }) => ({
-          idError: false
-        }));   
+        this.setState(({ settingItemTriggered }) => ({  settingItemTriggered: itemDetails  }));
+        this.setState(({ settingItemTriggeredIndex }) => ({  settingItemTriggeredIndex: index  })); 
+        this.setState(({ settingItemTriggeredId }) => ({  settingItemTriggeredId: itemDetails.id  }));           
+        this.setState(({ idError }) => ({  idError: false  }));   
       }
+    } else {
+      this.setState(({ idError }) => ({  idError: true  }));   
     }
+
+    this.setState(({ blockTriggeredIndex }) => ({ blockTriggeredIndex: blockIndex }));  
     this.setState(({ modalType }) => ({ modalType: modalChangeType }));
     this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
   };
-
-  handleAddChange = (input, value) => {
-    const hasOptions = ['radio', 'select'];
-    const settings = {  ...this.state.settings };
-    settings[input] = value;
-
-    if (input === 'id') {
-      if (this.props.allSettingIds && this.props.allSettingIds.includes(value)) {
-        this.setState(({ idError }) => ({ idError: true })); 
-      } else {
-        this.setState(({ idError }) => ({ idError: false }));        
-      }   
-    }
-
-    if (input === 'type' && hasOptions.includes(value) && !settings.options) {
-      settings.options = [{}];
-    };    
-    this.setState({ settings });
-  }
-
-  addNewOptionSet = () => {
-    const settings = this.state.settings;
-    settings.options.push({});
-    this.setState({ settings });
-  };
-
-  removeOptionSet = (index) => {
-    const settings = this.state.settings;
-    settings.options.splice(index, 1);
-    this.setState({ settings });
-  }
 
   handleClose = () => {
     this.setState(({ settings }) => ({ settings: { type: 'Pick an Option' } }));
@@ -152,7 +131,7 @@ class PageLayout extends Component {
     this.props.moveSettingItem(index, destination, blockIndex);
   }
 
-  addFakeItems = (blockIndex = undefined) => {
+  addFakeItems = (blockIndex) => {
     FakeItems.forEach(item => {
       setTimeout(() => {
         if (item.id) { item.id = item.id + Date.now().toString() };
@@ -177,10 +156,10 @@ class PageLayout extends Component {
       })
     }    
     settings.push({
-      content: '*2', 
+      content: "⇉", 
       onClick: () => {
         this.duplicateSettingsItem(index);
-        this.handleModalChange(index+1);
+        this.handleModalChange('duplicate', index);
       },
     });
 
@@ -189,6 +168,7 @@ class PageLayout extends Component {
 
   duplicateSettingsItem = (index, blockIndex) => {
     let selectedItem;
+
     if (index >= 0) {
       selectedItem = blockIndex >= 0 ? this.props.blocks[blockIndex].settings[index]
         : selectedItem = this.props.settingItems[index];
@@ -198,16 +178,31 @@ class PageLayout extends Component {
       this.setState(({ settings }) => ({
         settings: itemDetails
       }));
-      this.setState(({ idError }) => ({ idError: true }));  
     }
   }
 
   render() {
     const activeFields = Object.keys(types[this.props.type]);
-    const textFields = ["name", "class", "tag"];
-    const { handleChange, settingItems } = this.props;
+    const { modalActive,
+            modalType,
+            settingItemTriggered,
+            settingItemTriggeredIndex,
+            blockTriggeredIndex,
+            idError,
+            settings,
+          } = this.state;
 
-    const allSettingIds = settingItems.map(item => item.id );
+    const textFields = ["name", "class", "tag"];
+    const { handleFieldChange, 
+            settingItems,
+            deleteSettingItem,
+            updateSettingItem,
+            addSettingItem,
+            fields,
+            blocks,
+            addBlock,
+            deleteBlock,      
+          } = this.props;
 
     return (
       <Page
@@ -218,7 +213,6 @@ class PageLayout extends Component {
             title="Section details"
             description="A number of the common section details here"
           >          
-          
             <Card sectioned>
               <TextContainer>
               <Form>
@@ -229,9 +223,10 @@ class PageLayout extends Component {
                       key={field}
                       label={uppercaseFirst(field)} 
                       value={this.props.fields[field]}
-                      onChange={value => handleChange(field, value)}
+                      onChange={value => handleFieldChange(field, value)}
                       />
                     )
+                    return <p key={field}></p>
                   })}        
                 </FormLayout>
               </Form>
@@ -264,80 +259,60 @@ class PageLayout extends Component {
               }}
             />
             
-            <Button onClick={this.addFakeItems}>Add fake setting items</Button>
-            <Button onClick={() => this.handleModalChange('add')}>New Setting Item</Button>
+            <Stack distribution="center"  alignment="trailing">
+              <Button onClick={this.addFakeItems}>Add fake setting items</Button>
+              <Button onClick={() => this.handleModalChange('add')}>New Setting Item</Button>
+            </Stack>
 
             <SettingsModal 
-              modalActive={this.state.modalActive}
+              modalActive={modalActive}
               handleClose={this.handleClose}
-              modalType={this.state.modalType}
+              modalType={modalType}
               handleSettingChange={this.handleSettingChange}
-              updateSettingItem={this.props.updateSettingItem}
-              deleteSettingItem={this.props.deleteSettingItem}
-              settingItemTriggered={this.state.settingItemTriggered}
-              settingItemTriggeredIndex={this.state.settingItemTriggeredIndex}
-              blockTriggeredIndex={this.state.blockTriggeredIndex}   
-              idError={this.state.idError}    
-              settings={this.state.settings}
-              addSettingItem={this.props.addSettingItem}       
+              updateSettingItem={updateSettingItem}
+              deleteSettingItem={deleteSettingItem}
+              settingItemTriggered={settingItemTriggered}
+              settingItemTriggeredIndex={settingItemTriggeredIndex}
+              blockTriggeredIndex={blockTriggeredIndex}   
+              idError={idError}    
+              settings={settings}
+              addSettingItem={addSettingItem}       
             />
-            {/* <AddSettingModal 
-              addSettingItem={this.props.addSettingItem} 
-              allSettingIds={allSettingIds}
-              handleModalChange={this.handleModalChange}
-              modalActive={this.state.modalActive}
-              settingItemTriggered={this.state.settingItemTriggered}
-              settings={this.state.settings}
-              handleClose={this.handleClose}
-              idError={this.state.idError}
-              handleAddChange={this.handleAddChange}
-              addNewOptionSet={this.addNewOptionSet}
-              removeOptionSet={this.removeOptionSet}              
-            /> */}
 
           </Card>
           </Layout.AnnotatedSection>          
-          {/* <Layout.AnnotatedSection
+          <Layout.AnnotatedSection
             title="Blocks"
             description="optional setting"
           >
           { activeFields.includes('blocks') && (
             <Blocks 
-              fields={this.props.fields}
-              blocks={this.props.blocks}
-              addSettingItem={this.props.addSettingItem}
-              modalActive={this.state.modalActive}
+              modalActive={modalActive}
+              handleClose={this.handleClose}
+              modalType={modalType}
               handleModalChange={this.handleModalChange}
-              settingItemTriggered={this.state.settingItemTriggered}
-              settingItemTriggeredIndex={this.state.settingItemTriggeredIndex}
-              handleSettingChange={this.handleSettingChange}              
-              handleChange={this.props.handleChange}
-              duplicateSettingsItem={this.props.duplicateSettingsItem}
-              addFakeItems={this.addFakeItems}
-              moveItem={this.moveItem}
-              addBlock={this.props.addBlock}
-              deleteBlock={this.props.deleteBlock}
-              handleAddChange={this.handleAddChange}
-              addNewOptionSet={this.addNewOptionSet}
-              removeOptionSet={this.removeOptionSet}   
+              handleSettingChange={this.handleSettingChange}
+              updateSettingItem={updateSettingItem}
+              deleteSettingItem={deleteSettingItem}
+              settingItemTriggered={settingItemTriggered}
+              settingItemTriggeredIndex={settingItemTriggeredIndex}
+              blockTriggeredIndex={blockTriggeredIndex}   
+              idError={idError}    
+              settings={settings}
+              addSettingItem={addSettingItem}  
+              handleFieldChange={handleFieldChange}  
+              fields={fields}
+              blocks={blocks} 
+              addBlock={addBlock} 
+              deleteBlock={deleteBlock}  
+              addFakeItems={this.addFakeItems}          
             /> 
             )}
-          </Layout.AnnotatedSection> */}
+          </Layout.AnnotatedSection>
           <Layout.AnnotatedSection>  
           <Card sectioned>
-              {/* <EditSettingModal
-                updateSettingItem={this.props.updateSettingItem}
-                deleteSettingItem={this.props.deleteSettingItem}
-                modalActive={this.state.modalActive}
-                handleModalChange={this.handleModalChange}
-                settingItemTriggered={this.state.settingItemTriggered}
-                settingItemTriggeredIndex={this.state.settingItemTriggeredIndex}
-                blockTriggeredIndex={this.state.blockTriggeredIndex}
-                handleSettingChange={this.handleSettingChange}
-                idError={this.state.idError}
-                
-              /> */}
-              <Stack>
+              <Stack distribution="center"  alignment="trailing">
+
                 <RenderSchemaModal 
                   fields={this.props.fields} 
                   activeFields={Object.keys(types[this.props.type])}

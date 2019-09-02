@@ -8,13 +8,13 @@ const sections = require("../sections.json");
 class EditSettingForm extends Component {
   static propTypes = {
     updateSettingItem: PropTypes.func,
+    settingItemTriggered: PropTypes.func,
     updateAndClose: PropTypes.func,
     handleSettingChange: PropTypes.func,
-    settingItemTriggered: PropTypes.object,
+    idError: PropTypes.bool,
   }
 
   render() {
-    
     const {
       settingItemTriggered,
       handleSettingChange,
@@ -85,7 +85,7 @@ class EditSettingForm extends Component {
                     }, value)}
                   />
                   {input === 'id' && this.props.idError && (
-                    <InlineError message="Setting IDs must be unique" fieldID="settingID" />
+                    <InlineError message="Setting ID must be unique and cannot be blank" fieldID="settingID" />
                   )}
                 </div>
               );

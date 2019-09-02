@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Card, Collapsible, Stack, TextField } from "@shopify/polaris";
 import Block from "./Block";
-import AddSettingModal from "./AddSettingModal";
+import SettingsModal from "./SettingsModal";
 
 class Blocks extends Component {
   state = {
@@ -19,7 +19,7 @@ class Blocks extends Component {
     handleModalChange: PropTypes.func,
     settingItemTriggered: PropTypes.object,
     settingItemTriggeredIndex: PropTypes.number,
-    handleChange: PropTypes.func,
+    handleFieldChange: PropTypes.func,
     moveItem: PropTypes.func,
     addBlock: PropTypes.func,
   };    
@@ -38,7 +38,7 @@ class Blocks extends Component {
   };
 
   render() {
-    const { blocks, handleChange } = this.props;
+    const { blocks, handleFieldChange, handleModalChange } = this.props;
     const { blockState } = this.state;
 
     return (
@@ -58,37 +58,50 @@ class Blocks extends Component {
                   settingItemTriggered={this.props.settingItemTriggered}
                   settingItemTriggeredIndex={this.props.settingItemTriggeredIndex}
                   handleSettingChange={this.handleSettingChange}              
-                  handleChange={this.props.handleChange}
+                  handleFieldChange={this.props.handleFieldChange}
                   moveItem={this.props.moveItem}
                   duplicateSettingsItem={this.props.duplicateSettingsItem}
-                  
-                  
+                    
+                  handleClose={this.handleClose}
+                  modalType={this.state.modalType}
+                  blockTriggeredIndex={this.state.blockTriggeredIndex}   
+                  idError={this.state.idError}    
+                  settings={this.state.settings}
+                  addSettingItem={this.props.addSettingItem}  
+                  fields={this.props.fields}
                   />
               </Collapsible>
-                <Stack distribution="center">
-                  {blockState[`block${index}`] && (                
-                    <>
-                      <Button onClick={() => this.props.addFakeItems(index)}>Add fake setting items</Button>
-                      <AddSettingModal 
-                        addSettingItem={this.props.addSettingItem} 
-                        blockIndex={index} 
-                        handleAddChange={this.props.handleAddChange}
-                        addNewOptionSet={this.props.addNewOptionSet}
-                        removeOptionSet={this.props.removeOptionSet}  
-                        handleAddModal={this.propshandleAddModal}
-                        addModalActive={this.props.addModalActive}                         
-                      />
-                    </>
-                  )}
-                  <Button onClick={() => this.props.deleteBlock(index)}>Delete Block</Button>
-                  <Button
-                    onClick={() => this.handleToggleClick(index)}
-                    ariaExpanded={'open0'}
-                    ariaControls="basic-collapsible"
-                    >
-                    { blockState[`block${index}`] ? '^' : 'open'}
-                  </Button>                  
-                </Stack>           
+              <Stack distribution="center">
+                {blockState[`block${index}`] && (                
+                  <>
+                    <Button onClick={() => this.props.addFakeItems(index)}>Add fake setting items</Button>
+
+                    <SettingsModal 
+                      modalActive={this.state.modalActive}
+                      handleClose={this.handleClose}
+                      modalType={this.state.modalType}
+                      handleSettingChange={this.handleSettingChange}
+                      updateSettingItem={this.props.updateSettingItem}
+                      deleteSettingItem={this.props.deleteSettingItem}
+                      settingItemTriggered={this.state.settingItemTriggered}
+                      settingItemTriggeredIndex={this.state.settingItemTriggeredIndex}
+                      blockTriggeredIndex={this.state.blockTriggeredIndex}   
+                      idError={this.state.idError}    
+                      settings={this.state.settings}
+                      addSettingItem={this.props.addSettingItem}       
+                    />
+                  </>
+                )}
+                <Button onClick={() => this.props.deleteBlock(index)}>Delete Block</Button>
+                <Button onClick={() => handleModalChange('add', undefined, index)}>New Setting Item</Button>               
+                <Button
+                  onClick={() => this.handleToggleClick(index)}
+                  ariaExpanded={'open0'}
+                  ariaControls="basic-collapsible"
+                  >
+                  { blockState[`block${index}`] ? '⇧' : '⇩'}
+                </Button>   
+              </Stack>           
             </Card>
             
           )
@@ -104,7 +117,7 @@ class Blocks extends Component {
                 type="number" 
                 min="1"
                 value={this.props.fields.max_blocks}
-                onChange={value => handleChange('max_blocks', value)}
+                onChange={value => handleFieldChange('max_blocks', value)}
                 />
               )}            
             </Stack>

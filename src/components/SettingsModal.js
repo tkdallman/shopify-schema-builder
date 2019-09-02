@@ -5,25 +5,38 @@ import AddSettingForm from "./AddSettingForm";
 import EditSettingForm from './EditSettingForm';
 import { removeExtraneous } from './helpers';
 
-
 const sections = require("../sections.json");
 
 class SettingsModal extends Component {
+  static propTypes = {
+    modalActive: PropTypes.bool,
+    handleClose: PropTypes.func,
+    modalType: PropTypes.string,
+    handleSettingChange: PropTypes.func,
+    updateSettingItem: PropTypes.func,
+    deleteSettingItem: PropTypes.func,
+    settingItemTriggered: PropTypes.object,
+    settingItemTriggeredIndex: PropTypes.number,
+    blockTriggeredIndex: PropTypes.number,
+    idError: PropTypes.bool,
+    settings: PropTypes.object,
+    addSettingItem: PropTypes.func,
+  }
 
   deleteItem = () => {
-    const { deleteSettingItem, handleModalChange, settingItemTriggeredIndex, blockTriggeredIndex } = this.props;
+    const { deleteSettingItem, settingItemTriggeredIndex, blockTriggeredIndex } = this.props;
     const blockIndex = blockTriggeredIndex >= 0 ? blockTriggeredIndex : undefined;    
     deleteSettingItem(settingItemTriggeredIndex, blockTriggeredIndex);
     this.props.handleClose(settingItemTriggeredIndex, blockIndex);
   }
   
   updateAndClose = () => {
+    const { settingItemTriggeredIndex, settingItemTriggered, blockTriggeredIndex, modalType, settings } = this.props;
     if (this.props.idError) return;
-    const { settingItemTriggeredIndex, blockTriggeredIndex, modalType, settings } = this.props;
     const blockIndex = blockTriggeredIndex >= 0 ? blockTriggeredIndex : undefined;
 
     if (modalType === 'edit') {
-      const updatedSettingItem = {  ...this.props.settingItemTriggered };
+      const updatedSettingItem = {  ...settingItemTriggered };
       const settingItemProperties = [ 'type', ...Object.keys(sections[updatedSettingItem.type])];
       const settingItemWithoutExtraneous = removeExtraneous(updatedSettingItem, settingItemProperties);
     
@@ -48,14 +61,13 @@ class SettingsModal extends Component {
   }
 
   render() {
-
     const { modalActive, modalType, handleClose } = this.props;
     
     return (
       <Modal
       open={modalActive}
       onClose={handleClose}
-      title={modalType === 'edit' ? 'Edit Setting' : 'Add Setting'}
+      title={`${modalType ? modalType.charAt(0).toUpperCase() + modalType.slice(1) : ''} Setting`}
       primaryAction={{
         content: "Confirm",
         onAction: () => this.updateAndClose()
@@ -77,10 +89,18 @@ class SettingsModal extends Component {
             idError={this.props.idError}
           />
         }
+        {modalType === 'duplicate' && 
+          <AddSettingForm 
+            updateSettingItem={this.props.updateSettingItem}
+            updateAndClose={this.updateAndClose}
+            handleSettingChange={this.props.handleSettingChange}
+            idError={this.props.idError}
+            settings={this.props.settings}      
+          />
+        }
         {modalType === 'add' && 
           <AddSettingForm
             updateSettingItem={this.props.updateSettingItem}
-            settingItemTriggered={this.props.settingItemTriggered}
             updateAndClose={this.updateAndClose}
             handleSettingChange={this.props.handleSettingChange}
             idError={this.props.idError}    

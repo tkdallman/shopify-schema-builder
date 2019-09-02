@@ -7,19 +7,16 @@ const sections = require("../sections.json");
 class AddSettingForm extends Component {
 
   static propTypes = {
-    addSettingItem: PropTypes.func,
-    addNewOptionSet: PropTypes.func,
-    removeOptionSet: PropTypes.func,
+    updateSettingItem: PropTypes.func,
+    updateAndClose: PropTypes.func,
     handleSettingChange: PropTypes.func,
-    settings: PropTypes.object,
+    idError: PropTypes.bool,
   }
   
   render() {
-    const { settings, settingItemTriggered, handleSettingChange } = this.props;
+    const { settings, handleSettingChange } = this.props;
     const allOptions = [ 'Pick an Option', ...Object.keys(sections)];
-    const options = allOptions.map(option => {
-      return { value: option, label: option };
-    });
+    const options = allOptions.map(option => { return { value: option, label: option }});
     let additionalInputs = [];
 
     if (settings.type !== 'Pick an Option') {
@@ -40,7 +37,7 @@ class AddSettingForm extends Component {
                   input: "type" 
                 }
               , value)}
-              value={ settings.type || settingItemTriggered.type }
+              value={ settings.type }
             />
 
             {additionalInputs.map(input => {
@@ -55,7 +52,7 @@ class AddSettingForm extends Component {
                           index={index}
                           type={settings.type}
                           settings={settings} 
-                          handleSettingsChange={this.props.handleSettingChange}
+                          handleSettingChange={this.props.handleSettingChange}
                         />
                       })}
                     </div>
@@ -69,14 +66,14 @@ class AddSettingForm extends Component {
                     label={input}
                     key={input}
                     type={numberInputs.includes(input) ? 'number' : ''}
-                    value={settings[input] || this.props.settingItemTriggered[input]}
+                    value={settings[input]}
                     onChange={value => handleSettingChange({
                       changeType: 'editInput',
                       input
                     }, value)}
                   /> 
                   {input === 'id' && this.props.idError && (
-                    <InlineError message="Setting IDs must be unique" fieldID="settingID" />
+                    <InlineError message="Setting ID must be unique and cannot be blank" fieldID="settingID" />
                   )}
                 </div>
               )  

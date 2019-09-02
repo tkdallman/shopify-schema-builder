@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { TextField, FormLayout, Form, Button, ResourceList } from "@shopify/polaris";
+import { TextField, FormLayout, Form, ResourceList } from "@shopify/polaris";
 import SettingItem from "./SettingItem";
 
 class Blocks extends Component {
@@ -14,7 +14,7 @@ class Blocks extends Component {
     handleModalChange: PropTypes.func,
     settingItemTriggered: PropTypes.object,
     settingItemTriggeredIndex: PropTypes.number,
-    handleChange: PropTypes.func,
+    handleFieldChange: PropTypes.func,
     moveItem: PropTypes.func,
   };    
 
@@ -36,7 +36,7 @@ class Blocks extends Component {
       })
     }  
     settings.push({
-      content: '*2', 
+      content: '⇉', 
       onClick: () => {
         this.props.duplicateSettingsItem(index, blockIndex);
         this.props.handleModalChange(index+1);
@@ -48,7 +48,7 @@ class Blocks extends Component {
   render() {
     const activeFields = ["type", "name"];
     const { blockValues, blockIndex } = this.props;
-
+    
     return (
       <div>
         <Form>
@@ -59,7 +59,7 @@ class Blocks extends Component {
                   key={field}
                   label={field}
                   value={blockValues[field]}
-                  onChange={value => this.props.handleChange(field, value, blockIndex)}
+                  onChange={value => this.props.handleFieldChange(field, value, blockIndex)}
                 />
               );
             })}
@@ -76,7 +76,7 @@ class Blocks extends Component {
                       id={index}
                       key={index}
                       accessibilityLabel={`View details for ${item.id}`}
-                      onClick={() => this.props.handleModalChange(index, blockIndex)}
+                      onClick={() => this.props.handleModalChange('edit', index, blockIndex)}
                       shortcutActions={this.getSettings(index)}
                     >
                       <SettingItem id={index} item={item} />
