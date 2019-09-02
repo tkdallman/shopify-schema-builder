@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "private": true,
   "homepage": "https://tkdallman.github.io/shopify-schema-builder/",
+
   "devDependencies": {
     "concurrently": "4.1.0",
     "gh-pages": "^2.1.1",

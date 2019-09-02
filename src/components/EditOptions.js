@@ -7,12 +7,12 @@ class EditOptions extends Component {
     index: PropTypes.number,
     inputType: PropTypes.string,
     options: PropTypes.object,
-    handleChange: PropTypes.func,
+    handleSettingChange: PropTypes.func,
     isLastItem: PropTypes.bool,
   }
 
   render() {
-    const { inputType, options, index, handleChange, isLastItem } = this.props;
+    const { inputType, options, index, handleSettingChange, isLastItem } = this.props;
     const sharedInputs = ["value", "label"];
     let group;
 
@@ -22,7 +22,7 @@ class EditOptions extends Component {
           key={"group" + index}
           placeholder="group"
           value={options["group"]}
-          onChange={(value) => handleChange({
+          onChange={(value) => handleSettingChange({
             changeType: 'editOption',
             index, 
             attribute: "group" 
@@ -42,7 +42,7 @@ class EditOptions extends Component {
               key={input + index}
               placeholder={input}
               value={options[input]}
-              onChange={(value) => handleChange({
+              onChange={(value) => handleSettingChange({
                   changeType: 'editOption',
                   index, 
                   attribute: input 
@@ -52,11 +52,11 @@ class EditOptions extends Component {
           );
         })}
         {isLastItem ? (
-          <Button onClick={() => handleChange({ changeType: 'addOption' })} label="Add item">
+          <Button onClick={() => handleSettingChange({ changeType: 'addOption' })} label="Add item">
             +
           </Button>
         ) : (
-          <Button onClick={() => handleChange({ changeType: 'removeOption', index })} label="Remove item">
+          <Button onClick={() => handleSettingChange({ changeType: 'removeOption', index })} label="Remove item">
             -
           </Button>
         )}      

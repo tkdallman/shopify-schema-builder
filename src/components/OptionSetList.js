@@ -18,7 +18,7 @@ class OptionSetList extends Component {
             <Badge key={'option' + index}>
               <Stack vertical="true">
               <TextStyle variation="subdued">
-                { hasGroupProperty ? <><TextStyle variation="strong">Group: </TextStyle>{ optionSet.group + '      '}</> : '' }
+                { hasGroupProperty && <><TextStyle variation="strong">Group: </TextStyle>{ optionSet.group + ' '}</> }
                 <TextStyle variation="strong">Value: </TextStyle>{optionSet.value + '     '}
                 <TextStyle variation="strong">Label: </TextStyle>{optionSet.label}
               </TextStyle> 

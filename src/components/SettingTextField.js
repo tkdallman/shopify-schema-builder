@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TextField } from "@shopify/polaris";
 
-class SchemaTextField extends Component {
+class SettingTextField extends Component {
   state = {
     input: '',
   };
@@ -17,4 +17,4 @@ class SchemaTextField extends Component {
   }
 }
 
-export default SchemaTextField;
+export default SettingTextField;
