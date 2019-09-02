@@ -4,7 +4,7 @@ import "../css/styles.css";
 
 
 
-class RenderSchemaModal extends Component {
+class RenderFieldModal extends Component {
   state = {
     active: false,
   }
@@ -12,49 +12,44 @@ class RenderSchemaModal extends Component {
   handleModalChange = () => {
     this.setState(({ active }) => ({ active: !active }));
   };
-  
-  copyCode = () => {
-    console.log('copy code');
 
-  }
-
-  getSchemaJSON = () => {
+  getFieldJSON = () => {
     const removeQuotesRegex = new RegExp(/"(min|max|step)": "(\d*)"/gi);
-    let stringifiedSchemaItems = JSON.stringify(this.props.schemaItems, null, 2)
-                                       .replace(removeQuotesRegex, '"$1": $2')
-                                       .slice(1)
+    const { activeFields, fields } = this.props;
 
-    stringifiedSchemaItems = stringifiedSchemaItems.slice(0, -1);
+    let reorderedItems = {};
 
-    stringifiedSchemaItems = `{% schema %}\n` + stringifiedSchemaItems + `\n{% endschema %}`
+    activeFields.forEach(field => {
+      if (fields[field] && fields[field].length > 0 ) { reorderedItems[field] = fields[field]}
+    });
+
+    let stringifiedFieldItems = JSON.stringify(reorderedItems, null, 2)
+                                    .replace(removeQuotesRegex, '"$1": $2')
+
+
+    stringifiedFieldItems = `{% schema %}\n` + stringifiedFieldItems + `\n{% endschema %}`
     
-    return stringifiedSchemaItems;
+    return stringifiedFieldItems;
   }
 
   render() {
     const { active } = this.state;
-    const schemaItemsJSON = this.getSchemaJSON();
+    const fieldItemsJSON = this.getFieldJSON();
 
     return (
       <div>
-        <Button onClick={this.handleModalChange}>Render Schema</Button>
+        <Button onClick={this.handleModalChange}>Render JSON</Button>
         <Modal
           open={active}
           onClose={this.handleModalChange}
-          title="Add schema section"
+          title="Schema Section JSON"
           primaryAction={{
-            content: "Copy",
-            onAction: this.copyCode
+            content: "Close",
+            onAction: this.handleModalChange
           }}
-          secondaryActions={[
-            {
-              content: "Cancel",
-              onAction: this.handleModalChange
-            }
-          ]}
         >
           <Modal.Section>
-            <textarea value={schemaItemsJSON} readOnly="readOnly" ></textarea>
+            <textarea value={fieldItemsJSON} readOnly="readOnly" ></textarea>
           </Modal.Section>
         </Modal>
       </div>
@@ -62,4 +57,4 @@ class RenderSchemaModal extends Component {
   }
 }
 
-export default RenderSchemaModal;
+export default RenderFieldModal;

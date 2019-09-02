@@ -6,6 +6,9 @@ export function removeExtraneous(object, desiredKeys) {
       newObject[property] = object[property];
     }
   });   
-  
   return newObject;
+}
+
+export function uppercaseFirst(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TextStyle } from '@shopify/polaris';
 import OptionSetList from './OptionSetList.js';
 
-class SchemaItem extends Component {
+class SettingItem extends Component {
   render() {
     const { item } = this.props;
     return (
@@ -25,4 +25,4 @@ class SchemaItem extends Component {
   }
 }
 
-export default SchemaItem;
+export default SettingItem;
