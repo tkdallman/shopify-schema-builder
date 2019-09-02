@@ -20,19 +20,19 @@ class Blocks extends Component {
 
   getSettings = (index) => {
     const settings = [];
-    const { blockValues, blockIndex, moveItem } = this.props;
+    const { blockValues, blockIndex, moveSettingItem } = this.props;
     const numSettings = blockValues.settings.length;
 
     if (index > 0) { 
       settings.push({
         content: '↑', 
-        onClick: () => moveItem(index, index-1, blockIndex),
+        onClick: () => moveSettingItem(index, index-1, blockIndex),
       })
     }
     if (index !== numSettings - 1) { 
       settings.push({
         content: '↓', 
-        onClick: () => moveItem(index, index+1, blockIndex),
+        onClick: () => moveSettingItem(index, index+1, blockIndex),
       })
     }  
     settings.push({

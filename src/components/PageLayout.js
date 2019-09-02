@@ -127,10 +127,6 @@ class PageLayout extends Component {
     this.handleModalChange();
   };  
 
-  moveItem = (index, destination, blockIndex) => {
-    this.props.moveSettingItem(index, destination, blockIndex);
-  }
-
   addFakeItems = (blockIndex) => {
     FakeItems.forEach(item => {
       setTimeout(() => {
@@ -142,17 +138,18 @@ class PageLayout extends Component {
 
   getSettings = (index, numSettings = this.props.settingItems.length) => {
     const settings = [];
+    const { moveSettingItem } = this.props;
 
     if (index > 0) { 
       settings.push({
         content: '↑', 
-        onClick: () => this.moveItem(index, index-1),
+        onClick: () => moveSettingItem(index, index-1),
       })
     }
     if (index !== numSettings - 1) { 
       settings.push({
         content: '↓', 
-        onClick: () => this.moveItem(index, index+1),
+        onClick: () => moveSettingItem(index, index+1),
       })
     }    
     settings.push({
@@ -198,6 +195,7 @@ class PageLayout extends Component {
             deleteSettingItem,
             updateSettingItem,
             addSettingItem,
+            moveSettingItem,
             fields,
             blocks,
             addBlock,
@@ -294,6 +292,7 @@ class PageLayout extends Component {
               handleSettingChange={this.handleSettingChange}
               updateSettingItem={updateSettingItem}
               deleteSettingItem={deleteSettingItem}
+              moveSettingItem={this.props.moveSettingItem}      
               settingItemTriggered={settingItemTriggered}
               settingItemTriggeredIndex={settingItemTriggeredIndex}
               blockTriggeredIndex={blockTriggeredIndex}   
@@ -305,7 +304,7 @@ class PageLayout extends Component {
               blocks={blocks} 
               addBlock={addBlock} 
               deleteBlock={deleteBlock}  
-              addFakeItems={this.addFakeItems}          
+              addFakeItems={this.addFakeItems}   
             /> 
             )}
           </Layout.AnnotatedSection>

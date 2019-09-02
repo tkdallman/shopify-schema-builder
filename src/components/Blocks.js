@@ -20,7 +20,7 @@ class Blocks extends Component {
     settingItemTriggered: PropTypes.object,
     settingItemTriggeredIndex: PropTypes.number,
     handleFieldChange: PropTypes.func,
-    moveItem: PropTypes.func,
+    moveSettingItem: PropTypes.func,
     addBlock: PropTypes.func,
   };    
   
@@ -59,9 +59,8 @@ class Blocks extends Component {
                   settingItemTriggeredIndex={this.props.settingItemTriggeredIndex}
                   handleSettingChange={this.handleSettingChange}              
                   handleFieldChange={this.props.handleFieldChange}
-                  moveItem={this.props.moveItem}
-                  duplicateSettingsItem={this.props.duplicateSettingsItem}
-                    
+                  moveSettingItem={this.props.moveSettingItem}
+                  duplicateSettingsItem={this.props.duplicateSettingsItem}                  
                   handleClose={this.handleClose}
                   modalType={this.state.modalType}
                   blockTriggeredIndex={this.state.blockTriggeredIndex}   
