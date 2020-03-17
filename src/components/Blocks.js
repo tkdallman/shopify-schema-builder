@@ -53,14 +53,14 @@ class Blocks extends Component {
                   blockIndex={index}
                   updateSettingItem={this.props.updateSettingItem}
                   deleteSettingItem={this.props.deleteSettingItem}
+                  moveSettingItem={this.props.moveSettingItem}
+                  duplicateSettingsItem={this.props.duplicateSettingsItem}                  
                   modalActive={this.props.modalActive}
                   handleModalChange={this.props.handleModalChange}
                   settingItemTriggered={this.props.settingItemTriggered}
                   settingItemTriggeredIndex={this.props.settingItemTriggeredIndex}
                   handleSettingChange={this.handleSettingChange}              
                   handleFieldChange={this.props.handleFieldChange}
-                  moveSettingItem={this.props.moveSettingItem}
-                  duplicateSettingsItem={this.props.duplicateSettingsItem}                  
                   handleClose={this.handleClose}
                   modalType={this.state.modalType}
                   blockTriggeredIndex={this.state.blockTriggeredIndex}   

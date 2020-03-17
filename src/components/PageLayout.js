@@ -258,7 +258,6 @@ class PageLayout extends Component {
             />
             
             <Stack distribution="center"  alignment="trailing">
-              <Button onClick={this.addFakeItems}>Add fake setting items</Button>
               <Button onClick={() => this.handleModalChange('add')}>New Setting Item</Button>
             </Stack>
 
