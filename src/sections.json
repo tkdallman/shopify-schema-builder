@@ -70,6 +70,8 @@
     "info": false
   },  
   "url": {
+    "id": true,
+    "label": false 
   },  
   "video_url": {
     "id": true,

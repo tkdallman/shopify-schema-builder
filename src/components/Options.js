@@ -6,7 +6,7 @@ class Options extends Component {
   static propTypes = {
     index: PropTypes.number,
     type: PropTypes.string,
-    settings: PropTypes.array,
+    settings: PropTypes.object,
     handleSettingChange: PropTypes.func,
 
   };
