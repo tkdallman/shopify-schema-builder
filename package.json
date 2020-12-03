@@ -6,7 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "json-loader": "^0.5.7",
-    "react-scripts": "^2.1.1",
+    "react-scripts": "4.0.1",
     "redux-devtools": "^3.7.0"
   },
   "dependencies": {
