@@ -43,7 +43,7 @@ class PageLayout extends Component {
         this.props.modalEdit(itemDetails, index, id);
         break;
       case "duplicate":
-        this.props.duplicate(itemDetails, id);
+        this.props.modalDuplicate(itemDetails, id);
         break;
 
       case "add":

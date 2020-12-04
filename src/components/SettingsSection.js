@@ -33,8 +33,7 @@ class SettingsSection extends Component {
       });
     }
     settings.push({
-      // TODO: make this a better duplicate icon
-      content: "⇉",
+      content: "Duplicate",
       onClick: () => handleModalChange("duplicate", id, index),
     });
 
