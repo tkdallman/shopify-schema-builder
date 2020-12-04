@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Stack, Form, Select, FormLayout, TextField, InlineError } from "@shopify/polaris";
 import Options from './Options';
 import PropTypes from "prop-types";
-const sections = require("../sections.json");
+
+const sections = require("../data/sections.json");
 
 class AddSettingForm extends Component {
 

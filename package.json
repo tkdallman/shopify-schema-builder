@@ -1,7 +1,6 @@
 {
   "name": "shopify-schema-builder",
   "description": "dev tool for Shopify theme devs",
-  "homepage": "https://shopify-schema-builder.herokuapp.com/",
   "version": "0.1.0",
   "license": "MIT",
   "devDependencies": {

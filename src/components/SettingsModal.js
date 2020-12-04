@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Modal } from "@shopify/polaris";
 import AddSettingForm from "./AddSettingForm";
 import EditSettingForm from "./EditSettingForm";
-import { removeExtraneous, uppercaseFirst } from "../helpers";
+import { removeExtraneous, uppercaseFirst } from "../utils/helpers";
 
-const sections = require("../sections.json");
+const sections = require("../data/sections.json");
 
 class SettingsModal extends Component {
   state = {

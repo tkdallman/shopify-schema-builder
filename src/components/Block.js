@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { TextField, FormLayout, Form } from "@shopify/polaris";
 import SettingsSection from "./SettingsSection";
-import { uppercaseFirst } from "../helpers";
+import { uppercaseFirst } from "../utils/helpers";
 
 class Block extends Component {
   static propTypes = {

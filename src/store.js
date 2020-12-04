@@ -68,7 +68,6 @@ function blocks (state = [], action) {
       updatedState.push({ id: `block_${Date.now()}`, isOpen: true })
       return updatedState
     case 'TOGGLE_BLOCK':
-      // const updatedIndex = updatedState.indexOf(updatedState.find(block => block.id === action.id))
       updatedState[action.index].isOpen = action.setting
       return updatedState
     case 'DELETE_BLOCK':

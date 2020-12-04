@@ -14,9 +14,9 @@ import RenderSchemaModal from "./RenderSchemaModal";
 import Blocks from "./Blocks";
 import SettingsSection from "./SettingsSection";
 import SettingsModal from "./SettingsModal";
-import { uppercaseFirst } from "../helpers";
+import { uppercaseFirst } from "../utils/helpers";
 
-const types = require("../types.json");
+const types = require("../data/types.json");
 
 class PageLayout extends Component {
   state = {

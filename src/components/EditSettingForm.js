@@ -4,7 +4,7 @@ import { Stack, Form, Select, FormLayout, TextField, InlineError } from "@shopif
 import PropTypes from "prop-types";
 import EditOptions from "./EditOptions";
 
-const sections = require("../sections.json");
+const sections = require("../data/sections.json");
 
 class EditSettingForm extends Component {
 
