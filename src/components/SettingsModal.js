@@ -59,18 +59,18 @@ class SettingsModal extends Component {
   updateAndClose() {
     const {
       error,
-      allSettings,
+      savedSettings,
       modal: { modalType, index, id },
     } = this.props;
     const { settings } = this.state;
 
     let errorState = false;
-    const allSettingIds = allSettings.map((setting) => setting.id);
+    const settingIds = savedSettings[id].map((setting) => setting.id);
 
     // add error checking for block IDs
     if (modalType !== "edit") {
       if (
-        allSettingIds.includes(settings.id) ||
+        settingIds.includes(settings.id) ||
         !settings.id ||
         settings.id === ""
       )
@@ -195,7 +195,7 @@ class SettingsModal extends Component {
 const mapStateToProps = (state) => ({
   modal: state.modal,
   error: state.error,
-  allSettings: state.settings.store,
+  savedSettings: state.settings,
 });
 
 const mapDispatchToProps = (dispatch) => {

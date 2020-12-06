@@ -9,6 +9,7 @@ const sections = require("../data/sections.json");
 class EditSettingForm extends Component {
 
   static propTypes = {
+    preloadData: PropTypes.func,
     updateSettingItem: PropTypes.func,
     handleSettingChange: PropTypes.func,
     updateAndClose: PropTypes.func,

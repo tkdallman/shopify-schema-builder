@@ -13,7 +13,7 @@ class Block extends Component {
   };
 
   handleFieldChange(field, value) {
-    this.props.updateField(field, value);
+    this.props.updateField(field, value, this.props.id);
   }
 
   render() {
