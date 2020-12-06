@@ -20,17 +20,18 @@ class EditSettingForm extends Component {
   }
 
   render() {
-    const { settingItemTriggered, handleSettingChange, settings } = this.props;
+    const { handleSettingChange, settings } = this.props;
 
     const allOptions = Object.keys(sections);
     if (!allOptions) return false;
+    if (!this.props.modal.modalActive || !settings || settings.type === "Pick an Option") return false;
+    
     const options = allOptions.map(option => {
       return { value: option, label: option };
     });
 
-    if (!this.props.modal.modalActive || !settingItemTriggered) return false;
-
-    const inputs = Object.keys(sections[settingItemTriggered.type]);
+    const inputs = Object.keys(sections[settings.type]);
+  
     const numberInputs = ["min", "max", "step"];
 
     return (
@@ -100,7 +101,6 @@ class EditSettingForm extends Component {
 
 const mapStateToProps = state => ({ 
   settingItems: state.settings,
-  settingItemTriggered: state.modal.item,
   modalType: state.modal.modalType,
   modal: state.modal,
   error: state.error

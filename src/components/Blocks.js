@@ -98,7 +98,7 @@ const mapDispatchToProps = (dispatch) => {
     addBlock: (id ) => dispatch({ type: 'ADD_BLOCK', id }),
     addFields: (id ) => dispatch({ type: 'ADD_FIELDS', id }),
     addSetting: (id ) => dispatch({ type: 'ADD_SETTING', id }),
-    updateField: (field, value) => dispatch({ type: "UPDATE_FIELD", field, value }),
+    updateField: (field, value, id) => dispatch({ type: "UPDATE_FIELD", field, value, id }),
     toggleBlock: (index, isOpen) => dispatch({ type: 'TOGGLE_BLOCK', index, setting: isOpen }),
     deleteBlock: (index ) => dispatch({ type: 'DELETE_BLOCK', index }),
     deleteAllSettings: (id) =>dispatch({ type:'DELETE_ALL_SETTINGS', id }),

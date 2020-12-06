@@ -12,6 +12,7 @@ function fields (state = { store: {} }, { type, id = 'store', field, value }) {
       delete defaultState[id]
       return defaultState      
     case 'UPDATE_FIELD':
+      if (!defaultState[id]) defaultState[id] = {}
       defaultState[id][field] = value
       return defaultState
     default:
