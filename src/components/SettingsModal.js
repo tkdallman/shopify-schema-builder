@@ -65,7 +65,7 @@ class SettingsModal extends Component {
     const { settings } = this.state;
 
     let errorState = false;
-    const settingIds = savedSettings[id].map((setting) => setting.id);
+    const settingIds = savedSettings[id] ? savedSettings[id].map((setting) => setting.id) : [];
 
     // add error checking for block IDs
     if (modalType !== "edit") {
