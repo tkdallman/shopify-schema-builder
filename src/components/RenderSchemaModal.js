@@ -1,55 +1,69 @@
 import React, { Component } from "react";
-import { Modal,  Button } from "@shopify/polaris";
+import { connect } from "react-redux";
+import { Modal, Button } from "@shopify/polaris";
 import "../css/styles.css";
-
-
+import PropTypes from "prop-types";
 
 class RenderFieldModal extends Component {
   state = {
-    active: false,
+    modalActive: false,
+  };
+
+  static propTypes = {
+    activeFields: PropTypes.array
   }
 
   handleModalChange = () => {
-    this.setState(({ active }) => ({ active: !active }));
+    this.setState(({ modalActive }) => ({ modalActive: !modalActive }));
   };
 
   getFieldJSON = () => {
     const removeQuotesRegex = new RegExp(/"(min|max|step)": "(\d*)"/gi);
-    const { activeFields, fields } = this.props;
+    const { fields, settings, blocks } = this.props;
 
-    let reorderedItems = {};
+    const reorderedBlocks =
+      blocks.length === 0
+        ? null
+        : blocks.map(({ id }) => {
+            return { ...fields[id], settings: settings[id] };
+          });
 
-    activeFields.forEach(field => {
-      if (fields[field] && fields[field].length > 0 ) { reorderedItems[field] = fields[field]}
-    });
+    const reorderedObject = {
+      ...fields.store,
+      settings: settings.store,
+      ...(blocks.length > 0 && { blocks: reorderedBlocks }),
+    };
 
-    let stringifiedFieldItems = JSON.stringify(reorderedItems, null, 2)
-                                    .replace(removeQuotesRegex, '"$1": $2')
+    let stringifiedFieldItems = JSON.stringify(
+      reorderedObject,
+      null,
+      2
+    ).replace(removeQuotesRegex, '"$1": $2');
 
+    stringifiedFieldItems =
+      `{% schema %}\n` + stringifiedFieldItems + `\n{% endschema %}`;
 
-    stringifiedFieldItems = `{% schema %}\n` + stringifiedFieldItems + `\n{% endschema %}`
-    
     return stringifiedFieldItems;
-  }
+  };
 
   render() {
-    const { active } = this.state;
+    const { modalActive } = this.state;
     const fieldItemsJSON = this.getFieldJSON();
 
     return (
       <div>
         <Button onClick={this.handleModalChange}>Render JSON</Button>
         <Modal
-          open={active}
+          open={modalActive}
           onClose={this.handleModalChange}
           title="Schema Section JSON"
           primaryAction={{
             content: "Close",
-            onAction: this.handleModalChange
+            onAction: this.handleModalChange,
           }}
         >
           <Modal.Section>
-            <textarea value={fieldItemsJSON} readOnly="readOnly" ></textarea>
+            <textarea value={fieldItemsJSON} readOnly="readOnly"></textarea>
           </Modal.Section>
         </Modal>
       </div>
@@ -57,4 +71,12 @@ class RenderFieldModal extends Component {
   }
 }
 
-export default RenderFieldModal;
+const mapStateToProps = (state) => ({
+  settings: state.settings,
+  modal: state.modal,
+  error: state.error,
+  blocks: state.blocks,
+  fields: state.fields,
+});
+
+export default connect(mapStateToProps)(RenderFieldModal);

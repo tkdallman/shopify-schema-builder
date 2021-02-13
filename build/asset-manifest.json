@@ -1,15 +1,23 @@
 {
-  "main.css": "/shopify-schema-builder/static/css/main.78321992.chunk.css",
-  "main.js": "/shopify-schema-builder/static/js/main.4e74f4ac.chunk.js",
-  "main.js.map": "/shopify-schema-builder/static/js/main.4e74f4ac.chunk.js.map",
-  "runtime~main.js": "/shopify-schema-builder/static/js/runtime~main.83af8f51.js",
-  "runtime~main.js.map": "/shopify-schema-builder/static/js/runtime~main.83af8f51.js.map",
-  "static/css/2.a53895d8.chunk.css": "/shopify-schema-builder/static/css/2.a53895d8.chunk.css",
-  "static/js/2.79d1bd9a.chunk.js": "/shopify-schema-builder/static/js/2.79d1bd9a.chunk.js",
-  "static/js/2.79d1bd9a.chunk.js.map": "/shopify-schema-builder/static/js/2.79d1bd9a.chunk.js.map",
-  "index.html": "/shopify-schema-builder/index.html",
-  "precache-manifest.2b2be26e8f54c0f0806128a4aa7dfa55.js": "/shopify-schema-builder/precache-manifest.2b2be26e8f54c0f0806128a4aa7dfa55.js",
-  "service-worker.js": "/shopify-schema-builder/service-worker.js",
-  "static/css/2.a53895d8.chunk.css.map": "/shopify-schema-builder/static/css/2.a53895d8.chunk.css.map",
-  "static/css/main.78321992.chunk.css.map": "/shopify-schema-builder/static/css/main.78321992.chunk.css.map"
+  "files": {
+    "main.css": "/shopify-schema-builder/static/css/main.5394cc83.chunk.css",
+    "main.js": "/shopify-schema-builder/static/js/main.8ba1aa8a.chunk.js",
+    "main.js.map": "/shopify-schema-builder/static/js/main.8ba1aa8a.chunk.js.map",
+    "runtime-main.js": "/shopify-schema-builder/static/js/runtime-main.5a26b0f1.js",
+    "runtime-main.js.map": "/shopify-schema-builder/static/js/runtime-main.5a26b0f1.js.map",
+    "static/css/2.5e1dabfb.chunk.css": "/shopify-schema-builder/static/css/2.5e1dabfb.chunk.css",
+    "static/js/2.2c7b9253.chunk.js": "/shopify-schema-builder/static/js/2.2c7b9253.chunk.js",
+    "static/js/2.2c7b9253.chunk.js.map": "/shopify-schema-builder/static/js/2.2c7b9253.chunk.js.map",
+    "index.html": "/shopify-schema-builder/index.html",
+    "static/css/2.5e1dabfb.chunk.css.map": "/shopify-schema-builder/static/css/2.5e1dabfb.chunk.css.map",
+    "static/css/main.5394cc83.chunk.css.map": "/shopify-schema-builder/static/css/main.5394cc83.chunk.css.map",
+    "static/js/2.2c7b9253.chunk.js.LICENSE.txt": "/shopify-schema-builder/static/js/2.2c7b9253.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5a26b0f1.js",
+    "static/css/2.5e1dabfb.chunk.css",
+    "static/js/2.2c7b9253.chunk.js",
+    "static/css/main.5394cc83.chunk.css",
+    "static/js/main.8ba1aa8a.chunk.js"
+  ]
 }

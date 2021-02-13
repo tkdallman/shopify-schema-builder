@@ -1,88 +1,45 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { TextField, FormLayout, Form, ResourceList } from "@shopify/polaris";
-import SettingItem from "./SettingItem";
+import { TextField, FormLayout, Form } from "@shopify/polaris";
+import SettingsSection from "./SettingsSection";
+import { uppercaseFirst } from "../utils/helpers";
 
-class Blocks extends Component {
-
+class Block extends Component {
   static propTypes = {
     blockValues: PropTypes.object,
-    blockIndex: PropTypes.number,
-    updateSettingItem: PropTypes.func,
-    deleteSettingItem: PropTypes.func,
-    modalActive: PropTypes.bool,
+    id: PropTypes.string,
     handleModalChange: PropTypes.func,
-    settingItemTriggered: PropTypes.object,
-    settingItemTriggeredIndex: PropTypes.number,
-    handleFieldChange: PropTypes.func,
-    moveItem: PropTypes.func,
-  };    
+  };
 
-  getSettings = (index) => {
-    const settings = [];
-    const { blockValues, blockIndex, moveSettingItem } = this.props;
-    const numSettings = blockValues.settings.length;
-
-    if (index > 0) { 
-      settings.push({
-        content: '↑', 
-        onClick: () => moveSettingItem(index, index-1, blockIndex),
-      })
-    }
-    if (index !== numSettings - 1) { 
-      settings.push({
-        content: '↓', 
-        onClick: () => moveSettingItem(index, index+1, blockIndex),
-      })
-    }  
-    settings.push({
-      content: '⇉', 
-      onClick: () => {
-        this.props.duplicateSettingsItem(index, blockIndex);
-        this.props.handleModalChange(index+1);
-      },
-    });     
-    return settings;
+  handleFieldChange(field, value) {
+    this.props.updateField(field, value, this.props.id);
   }
 
   render() {
     const activeFields = ["type", "name"];
-    const { blockValues, blockIndex } = this.props;
-    
+    const { handleModalChange, fields, id } = this.props;
+    const blockValues = fields[id] || {};
+
     return (
       <div>
         <Form>
           <FormLayout>
-            {activeFields.map(field => {
+            {activeFields.map((field) => {
               return (
                 <TextField
                   key={field}
-                  label={field}
+                  label={uppercaseFirst(field)}
                   value={blockValues[field]}
-                  onChange={value => this.props.handleFieldChange(field, value, blockIndex)}
+                  onChange={(value) => this.handleFieldChange(field, value)}
                 />
               );
             })}
             Settings
-            <ResourceList
-              resourceName={{ singular: "Setting", plural: "Settings" }}
-              items={blockValues.settings}
-              renderItem={item => {
-                const index = blockValues.settings.indexOf(item);
-
-                if (item)
-                  return (
-                    <ResourceList.Item
-                      id={index}
-                      key={index}
-                      accessibilityLabel={`View details for ${item.id}`}
-                      onClick={() => this.props.handleModalChange('edit', index, blockIndex)}
-                      shortcutActions={this.getSettings(index)}
-                    >
-                      <SettingItem id={index} item={item} />
-                    </ResourceList.Item>
-                  );
-              }}
+            <SettingsSection
+              handleModalChange={handleModalChange}
+              id={id}
+              showSettingsButton={false}
             />
           </FormLayout>
         </Form>
@@ -91,4 +48,23 @@ class Blocks extends Component {
   }
 }
 
-export default Blocks;
+const mapStateToProps = (state) => ({
+  modal: state.modal,
+  error: state.error,
+  settings: state.settings.blocks,
+  blocks: state.blocks,
+  fields: state.fields,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    updateField: (field, value) => dispatch({
+      type: "UPDATE_FIELD",
+      field,
+      value,
+      id: ownProps.id,      
+    })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Block);

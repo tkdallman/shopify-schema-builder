@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Stack, Form, Select, FormLayout, TextField, InlineError } from "@shopify/polaris";
 import Options from './Options';
 import PropTypes from "prop-types";
-const sections = require("../sections.json");
+
+const sections = require("../data/sections.json");
 
 class AddSettingForm extends Component {
 
   static propTypes = {
-    updateSettingItem: PropTypes.func,
+    preloadData: PropTypes.func,
+    settings: PropTypes.object, 
     updateAndClose: PropTypes.func,
     handleSettingChange: PropTypes.func,
     idError: PropTypes.bool,
   }
-  
+
+  componentDidMount() {
+    if (this.props.modal.modalType === 'duplicate') {
+      this.props.preloadData(this.props.modal.item)
+    }
+  }
+
   render() {
     const { settings, handleSettingChange } = this.props;
     const allOptions = [ 'Pick an Option', ...Object.keys(sections)];
@@ -25,7 +34,7 @@ class AddSettingForm extends Component {
     const numberInputs = ['min', 'max', 'step'];
 
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.updateAndClose}>
         <FormLayout>
           <Stack vertical>
             <Select
@@ -72,7 +81,7 @@ class AddSettingForm extends Component {
                       input
                     }, value)}
                   /> 
-                  {input === 'id' && this.props.idError && (
+                  {input === 'id' && this.props.error && (
                     <InlineError message="Setting ID must be unique and cannot be blank" fieldID="settingID" />
                   )}
                 </div>
@@ -86,4 +95,12 @@ class AddSettingForm extends Component {
   }
 }
 
-export default AddSettingForm;
+const mapStateToProps = state => ({ 
+  settingItems: state.settings,
+  settingItemTriggered: state.modal.item,
+  modal: state.modal,
+  modalType: state.modal.modalType,
+  error: state.error.errorState
+})
+
+export default connect(mapStateToProps)(AddSettingForm);

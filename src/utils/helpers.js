@@ -1,11 +1,8 @@
 export function removeExtraneous(object, desiredKeys) {
-  const newObject = {};
-
-  desiredKeys.forEach(property => { 
-    if (object[property]) {
-      newObject[property] = object[property];
-    }
-  });   
+  const newObject = desiredKeys.reduce((obj, property) => { 
+    if (object[property]) obj[property] = object[property];
+    return obj
+  }, {});   
   return newObject;
 }
 

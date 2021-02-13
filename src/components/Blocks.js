@@ -1,129 +1,109 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Button, Card, Collapsible, Stack, TextField } from "@shopify/polaris";
 import Block from "./Block";
-import SettingsModal from "./SettingsModal";
 
 class Blocks extends Component {
-  state = {
-    blockState: {
-      block0: true,
-    },
+  static propTypes = {
+    handleModalChange: PropTypes.func,
   };
 
-  static propTypes = {
-    blocks: PropTypes.array,
-    updateSettingItem: PropTypes.func,
-    deleteSettingItem: PropTypes.func,
-    modalActive: PropTypes.bool,
-    handleModalChange: PropTypes.func,
-    settingItemTriggered: PropTypes.object,
-    settingItemTriggeredIndex: PropTypes.number,
-    handleFieldChange: PropTypes.func,
-    moveSettingItem: PropTypes.func,
-    addBlock: PropTypes.func,
-  };    
-  
-  addBlock = () => {
-    const blockState =  { ...this.state.blockState };
-    this.props.addBlock();
-    blockState[`block${this.props.blocks.length - 1}`] = true
-    this.setState({ blockState });
+  addBlock() {
+    const id = `block_${Date.now()}`;
+    this.props.addBlock(id);
+    this.props.addFields(id);
+    this.props.addSetting(id);
   }
 
-  handleToggleClick = (index) => {
-    const blockState =  { ...this.state.blockState };
-    blockState[`block${index}`] = !blockState[`block${index}`];
-    this.setState({ blockState });
-  };
+  deleteBlock(index, blockId) {
+    this.props.deleteBlock(index);
+    this.props.deleteAllSettings(blockId);
+    this.props.deleteAllFields(blockId);
+  }
+
+  updateMaxBlocks(value) {
+    this.props.updateField("maxBlocks", parseInt(value));
+  }
+
+  handleToggleClick(index, isOpen) {
+    this.props.toggleBlock(index, isOpen);
+  }
 
   render() {
-    const { blocks, handleFieldChange, handleModalChange } = this.props;
-    const { blockState } = this.state;
+    const { blocks, fields, handleModalChange } = this.props;
 
     return (
       <>
         {blocks.map((block, index) => {
           return (
-            <Card sectioned key={'block' + index} >            
-              <Collapsible open={blockState[`block${index}`]} id="basic-collapsible">
+            <Card sectioned key={block.id}>
+              <Collapsible open={block.isOpen} id="basic-collapsible">
                 <Block
-                  key={'item' + index}
+                  key={block.id}
                   blockValues={block}
-                  blockIndex={index}
-                  updateSettingItem={this.props.updateSettingItem}
-                  deleteSettingItem={this.props.deleteSettingItem}
-                  moveSettingItem={this.props.moveSettingItem}
-                  duplicateSettingsItem={this.props.duplicateSettingsItem}                  
-                  modalActive={this.props.modalActive}
-                  handleModalChange={this.props.handleModalChange}
-                  settingItemTriggered={this.props.settingItemTriggered}
-                  settingItemTriggeredIndex={this.props.settingItemTriggeredIndex}
-                  handleSettingChange={this.handleSettingChange}              
-                  handleFieldChange={this.props.handleFieldChange}
-                  handleClose={this.handleClose}
-                  modalType={this.state.modalType}
-                  blockTriggeredIndex={this.state.blockTriggeredIndex}   
-                  idError={this.state.idError}    
-                  settings={this.state.settings}
-                  addSettingItem={this.props.addSettingItem}  
-                  fields={this.props.fields}
-                  />
+                  id={block.id}
+                  handleModalChange={handleModalChange}
+                />
               </Collapsible>
               <Stack distribution="center">
-                {blockState[`block${index}`] && (                
-                  <>
-                    <Button onClick={() => this.props.addFakeItems(index)}>Add fake setting items</Button>
-
-                    <SettingsModal 
-                      modalActive={this.state.modalActive}
-                      handleClose={this.handleClose}
-                      modalType={this.state.modalType}
-                      handleSettingChange={this.handleSettingChange}
-                      updateSettingItem={this.props.updateSettingItem}
-                      deleteSettingItem={this.props.deleteSettingItem}
-                      settingItemTriggered={this.state.settingItemTriggered}
-                      settingItemTriggeredIndex={this.state.settingItemTriggeredIndex}
-                      blockTriggeredIndex={this.state.blockTriggeredIndex}   
-                      idError={this.state.idError}    
-                      settings={this.state.settings}
-                      addSettingItem={this.props.addSettingItem}       
-                    />
-                  </>
-                )}
-                <Button onClick={() => this.props.deleteBlock(index)}>Delete Block</Button>
-                <Button onClick={() => handleModalChange('add', undefined, index)}>New Setting Item</Button>               
+                <Button onClick={() => this.deleteBlock(index, block.id)}>
+                  Delete Block
+                </Button>
+                <Button onClick={() => handleModalChange("add", block.id)}>
+                  New Setting Item
+                </Button>
                 <Button
-                  onClick={() => this.handleToggleClick(index)}
-                  ariaExpanded={'open0'}
+                  onClick={() => this.handleToggleClick(index, !block.isOpen)}
+                  ariaExpanded={"open0"}
                   ariaControls="basic-collapsible"
-                  >
-                  { blockState[`block${index}`] ? '⇧' : '⇩'}
-                </Button>   
-              </Stack>           
+                >
+                  {block.isOpen ? "⇧" : "⇩"}
+                </Button>
+              </Stack>
             </Card>
-            
-          )
+          );
         })}
 
         <Card sectioned>
-          <Stack distribution="center"  alignment="trailing">
+          <Stack distribution="center" alignment="trailing">
             <Button onClick={() => this.addBlock()}>Add New Block</Button>
-            { blocks.length > 0  && (
-              <TextField 
-                key={'max_blocks'}
-                label={'Max Blocks'}
-                type="number" 
+            {blocks.length > 0 && (
+              <TextField
+                key={"max_blocks"}
+                label={"Max Blocks"}
+                type="number"
                 min="1"
-                value={this.props.fields.max_blocks}
-                onChange={value => handleFieldChange('max_blocks', value)}
-                />
-              )}            
-            </Stack>
+                value={fields.store.maxBlocks}
+                onChange={(value) => this.updateMaxBlocks(value)}
+              />
+            )}
+          </Stack>
         </Card>
       </>
     );
   }
 }
 
-export default Blocks;
+const mapStateToProps = (state) => ({
+  storeSettings: state.settings.blocks,
+  modal: state.modal,
+  error: state.error,
+  blocks: state.blocks,
+  fields: state.fields,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {     
+    addBlock: (id ) => dispatch({ type: 'ADD_BLOCK', id }),
+    addFields: (id ) => dispatch({ type: 'ADD_FIELDS', id }),
+    addSetting: (id ) => dispatch({ type: 'ADD_SETTING', id }),
+    updateField: (field, value, id) => dispatch({ type: "UPDATE_FIELD", field, value, id }),
+    toggleBlock: (index, isOpen) => dispatch({ type: 'TOGGLE_BLOCK', index, setting: isOpen }),
+    deleteBlock: (index ) => dispatch({ type: 'DELETE_BLOCK', index }),
+    deleteAllSettings: (id) =>dispatch({ type:'DELETE_ALL_SETTINGS', id }),
+    deleteAllFields: (id) => dispatch({ type: 'DELETE_ALL_FIELDS', id }),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blocks);
