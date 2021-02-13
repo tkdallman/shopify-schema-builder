@@ -19,6 +19,8 @@
     "browserslist": "^4.15.0",
     "eslint-utils": "^1.4.2",
     "gh-pages": "^3.1.0",
+    "immer": "^8.0.1",
+    "node-notifier": "^8.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.1.3",
