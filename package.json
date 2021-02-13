@@ -1,6 +1,7 @@
 {
   "name": "shopify-schema-builder",
-  "description": "dev tool for Shopify theme devs",
+  "author": "TK Dallman",
+  "description": "Dev tool for Shopify theme devs",
   "version": "0.1.0",
   "license": "MIT",
   "devDependencies": {
