@@ -3,33 +3,34 @@
     "id": true,
     "placeholder": false,
     "default": false,
-    "info": false
+    "label": false
   },
   "textarea": {
     "id": true,
     "placeholder": false,
     "default": false,
-    "info": false
+    "label": false
   },
   "image_picker": {
-    "id": true
+    "id": true,
+      "label": false
   },
   "radio": {
     "id": true,
     "options": false,
     "default": false,
-    "info": false
+    "label": false
   },  
   "select": {
     "id": true,
     "options": false,
     "default": false,
-    "info": false
+    "label": false
   },    
   "checkbox": {
     "id": true,
     "default": false,
-    "info": false
+    "label": false
   },    
   "range": {
     "id": true,
@@ -42,32 +43,32 @@
   "color": {
     "id": true,
     "default": false,
-    "info": false
+    "label": false
   },    
   "font_picker": {
     "id": true,
     "default": false,
-    "info": false
+    "label": false
   },    
   "collection": {
     "id": true,
-    "info": false
+    "label": false
   },    
   "product": {
     "id": true,
-    "info": false
+    "label": false
   },    
   "blog": {
     "id": true,
-    "info": false
+    "label": false
   },    
   "page": {
     "id": true,
-    "info": false
+    "label": false
   },    
   "link_list": {
     "id": true,
-    "info": false
+    "label": false
   },  
   "url": {
     "id": true,
@@ -92,7 +93,7 @@
   },      
   "header": {
     "content": true,
-    "info": false
+    "label": false
   },
   "paragraph": {
     "content": true
