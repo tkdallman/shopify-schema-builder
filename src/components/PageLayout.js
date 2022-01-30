@@ -174,6 +174,6 @@ const mapDispatchToProps = (dispatch) => {
       value,    
     })
   }
-}
+} 
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageLayout);
