@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/schema-maker-shopify/static/css/main.5394cc83.chunk.css",
-    "main.js": "/schema-maker-shopify/static/js/main.f783fcc4.chunk.js",
-    "main.js.map": "/schema-maker-shopify/static/js/main.f783fcc4.chunk.js.map",
-    "runtime-main.js": "/schema-maker-shopify/static/js/runtime-main.aae969cb.js",
-    "runtime-main.js.map": "/schema-maker-shopify/static/js/runtime-main.aae969cb.js.map",
-    "static/js/2.d187785a.chunk.js": "/schema-maker-shopify/static/js/2.d187785a.chunk.js",
-    "static/js/2.d187785a.chunk.js.map": "/schema-maker-shopify/static/js/2.d187785a.chunk.js.map",
-    "index.html": "/schema-maker-shopify/index.html",
-    "static/css/main.5394cc83.chunk.css.map": "/schema-maker-shopify/static/css/main.5394cc83.chunk.css.map",
-    "static/js/2.d187785a.chunk.js.LICENSE.txt": "/schema-maker-shopify/static/js/2.d187785a.chunk.js.LICENSE.txt"
+    "main.css": "/schema-maker-maison-commerce/static/css/main.5394cc83.chunk.css",
+    "main.js": "/schema-maker-maison-commerce/static/js/main.f783fcc4.chunk.js",
+    "main.js.map": "/schema-maker-maison-commerce/static/js/main.f783fcc4.chunk.js.map",
+    "runtime-main.js": "/schema-maker-maison-commerce/static/js/runtime-main.e5ae3314.js",
+    "runtime-main.js.map": "/schema-maker-maison-commerce/static/js/runtime-main.e5ae3314.js.map",
+    "static/js/2.bc31933b.chunk.js": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js",
+    "static/js/2.bc31933b.chunk.js.map": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js.map",
+    "index.html": "/schema-maker-maison-commerce/index.html",
+    "static/css/main.5394cc83.chunk.css.map": "/schema-maker-maison-commerce/static/css/main.5394cc83.chunk.css.map",
+    "static/js/2.bc31933b.chunk.js.LICENSE.txt": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.aae969cb.js",
-    "static/js/2.d187785a.chunk.js",
+    "static/js/runtime-main.e5ae3314.js",
+    "static/js/2.bc31933b.chunk.js",
     "static/css/main.5394cc83.chunk.css",
     "static/js/main.f783fcc4.chunk.js"
   ]
