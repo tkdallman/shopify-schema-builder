@@ -64,7 +64,7 @@ class PageLayout extends Component {
     const { mainFields, updateValue } = this.props;
 
     return (
-      <Page title="Shopify Section Schema Generator">
+      <Page title="Maison Commerce | Shopify Schema Maker">
         <Layout>
           <Layout.AnnotatedSection
             title="Section details"
