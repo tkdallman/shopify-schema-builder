@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/shopify-schema-builder/static/css/main.5394cc83.chunk.css",
-    "main.js": "/shopify-schema-builder/static/js/main.62c436b4.chunk.js",
-    "main.js.map": "/shopify-schema-builder/static/js/main.62c436b4.chunk.js.map",
-    "runtime-main.js": "/shopify-schema-builder/static/js/runtime-main.5a26b0f1.js",
-    "runtime-main.js.map": "/shopify-schema-builder/static/js/runtime-main.5a26b0f1.js.map",
-    "static/js/2.31700c53.chunk.js": "/shopify-schema-builder/static/js/2.31700c53.chunk.js",
-    "static/js/2.31700c53.chunk.js.map": "/shopify-schema-builder/static/js/2.31700c53.chunk.js.map",
-    "index.html": "/shopify-schema-builder/index.html",
-    "static/css/main.5394cc83.chunk.css.map": "/shopify-schema-builder/static/css/main.5394cc83.chunk.css.map",
-    "static/js/2.31700c53.chunk.js.LICENSE.txt": "/shopify-schema-builder/static/js/2.31700c53.chunk.js.LICENSE.txt"
+    "main.css": "/schema-maker-maison-commerce/static/css/main.5394cc83.chunk.css",
+    "main.js": "/schema-maker-maison-commerce/static/js/main.f783fcc4.chunk.js",
+    "main.js.map": "/schema-maker-maison-commerce/static/js/main.f783fcc4.chunk.js.map",
+    "runtime-main.js": "/schema-maker-maison-commerce/static/js/runtime-main.e5ae3314.js",
+    "runtime-main.js.map": "/schema-maker-maison-commerce/static/js/runtime-main.e5ae3314.js.map",
+    "static/js/2.bc31933b.chunk.js": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js",
+    "static/js/2.bc31933b.chunk.js.map": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js.map",
+    "index.html": "/schema-maker-maison-commerce/index.html",
+    "static/css/main.5394cc83.chunk.css.map": "/schema-maker-maison-commerce/static/css/main.5394cc83.chunk.css.map",
+    "static/js/2.bc31933b.chunk.js.LICENSE.txt": "/schema-maker-maison-commerce/static/js/2.bc31933b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5a26b0f1.js",
-    "static/js/2.31700c53.chunk.js",
+    "static/js/runtime-main.e5ae3314.js",
+    "static/js/2.bc31933b.chunk.js",
     "static/css/main.5394cc83.chunk.css",
-    "static/js/main.62c436b4.chunk.js"
+    "static/js/main.f783fcc4.chunk.js"
   ]
 }
